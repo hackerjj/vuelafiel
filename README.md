@@ -1,8 +1,8 @@
-# VuelaFiel
+# VuelaAmigo
 
 **Encuentra tu vuelo al mejor precio.**
 
-VuelaFiel reúne los tramos de un itinerario y lleva directo a comparar precios en vivo (Google Flights, Skyscanner, Kayak y aerolíneas), con ruta y fecha ya cargadas. Prototipo funcional, pensado para crecer como plataforma.
+VuelaAmigo reúne los tramos de un itinerario y lleva directo a comparar precios en vivo (Google Flights, Skyscanner, Kayak y aerolíneas), con ruta y fecha ya cargadas. Prototipo funcional, pensado para crecer como plataforma. Diseño: fondo blanco, una sola gama de azules.
 
 ## Demo
 
