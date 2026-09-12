@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VuelaFiel — Encuentra tu vuelo al mejor precio</title>
+<style>
+  :root{
+    /* Paleta VuelaFiel: azul cielo + coral cálido sobre fondo profundo */
+    --bg:#0b1220; --bg2:#0f1a2e;
+    --card:#141f36; --card2:#1c2a47;
+    --ink:#f2f6ff; --muted:#93a2c0;
+    --line:#26344f;
+    --brand:#38bdf8;     /* cielo */
+    --brand-deep:#2563eb;/* azul vuelo */
+    --coral:#ff7a59;     /* acento cálido */
+    --gold:#fbbf24;
+    --done:#34d399;
+    --warn:#fbbf24;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    color:var(--ink);line-height:1.5;-webkit-font-smoothing:antialiased;
+    background:radial-gradient(1200px 600px at 80% -10%, rgba(56,189,248,.12), transparent 60%),
+               radial-gradient(900px 500px at -10% 10%, rgba(255,122,89,.10), transparent 55%),
+               var(--bg);}
+  .ico{display:inline-block;width:1em;height:1em;vertical-align:-0.125em;margin-right:4px}
+
+  /* ---------- Top bar / brand ---------- */
+  .topbar{position:sticky;top:0;z-index:20;backdrop-filter:blur(10px);
+    background:rgba(11,18,32,.72);border-bottom:1px solid var(--line)}
+  .topbar-in{max-width:1000px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:1.15rem;letter-spacing:-.02em}
+  .brand .name b{color:var(--brand)}
+  .brand .name i{font-style:normal;color:var(--coral)}
+  .logo{width:38px;height:38px;flex:none;border-radius:11px;
+    background:linear-gradient(135deg,var(--brand),var(--brand-deep));
+    display:grid;place-items:center;box-shadow:0 6px 18px rgba(37,99,235,.4)}
+  .logo svg{width:22px;height:22px;color:#fff;margin:0}
+  .tag{color:var(--muted);font-size:.78rem;font-weight:500;display:none}
+  @media(min-width:640px){.tag{display:block}}
+
+  /* ---------- Hero ---------- */
+  .hero{max-width:1000px;margin:0 auto;padding:34px 20px 6px}
+  .hero h1{font-size:1.9rem;line-height:1.15;margin:0 0 8px;letter-spacing:-.02em}
+  .hero h1 .hl{background:linear-gradient(90deg,var(--brand),var(--coral));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .hero p{color:var(--muted);margin:0;max-width:640px}
+  .legend{display:flex;gap:16px;flex-wrap:wrap;color:var(--muted);font-size:.82rem;margin:16px 0 0}
+  .legend b{color:var(--ink);font-weight:600}
+
+  /* ---------- Cards ---------- */
+  main{max-width:1000px;margin:0 auto;padding:14px 20px 60px}
+  .grid{display:grid;gap:16px;grid-template-columns:1fr}
+  @media(min-width:760px){.grid{grid-template-columns:1fr 1fr}}
+  .card{background:linear-gradient(180deg,var(--card),var(--card2));border:1px solid var(--line);
+    border-radius:16px;padding:18px;position:relative;overflow:hidden}
+  .card::before{content:"";position:absolute;inset:0 0 auto 0;height:3px;
+    background:linear-gradient(90deg,var(--brand),var(--coral))}
+  .card.done{opacity:.7}
+  .card.done::before{background:linear-gradient(90deg,var(--done),#065f46)}
+  .row-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+  .route{font-size:1.2rem;font-weight:750;display:flex;align-items:center;gap:9px}
+  .iata{background:rgba(56,189,248,.12);border:1px solid rgba(56,189,248,.3);color:var(--brand);
+    border-radius:8px;padding:2px 8px;font-size:.95rem;font-weight:700}
+  .arrow{color:var(--coral);display:inline-flex}
+  .badge{font-size:.7rem;font-weight:700;padding:4px 10px;border-radius:20px;white-space:nowrap}
+  .b-pend{background:rgba(251,191,36,.14);color:var(--warn);border:1px solid rgba(251,191,36,.35)}
+  .b-done{background:rgba(52,211,153,.14);color:var(--done);border:1px solid rgba(52,211,153,.35)}
+  .title{font-weight:650;margin:12px 0 2px}
+  .meta{color:var(--muted);font-size:.87rem;margin:3px 0}
+  .meta strong{color:var(--ink);font-weight:650}
+  .chip{display:inline-block;background:rgba(255,255,255,.05);border:1px solid var(--line);
+    border-radius:6px;padding:1px 7px;font-size:.78rem;color:var(--muted)}
+  .note{background:rgba(56,189,248,.06);border-left:3px solid var(--brand);padding:8px 12px;border-radius:6px;
+    font-size:.83rem;color:var(--muted);margin:12px 0 2px}
+  .note.warm{background:rgba(255,122,89,.07);border-left-color:var(--coral)}
+  .note strong{color:var(--ink)}
+  .price{color:var(--muted);font-size:.8rem}
+  .price b{color:var(--gold)}
+  .btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+  a.btn{display:inline-flex;align-items:center;gap:5px;text-decoration:none;font-size:.83rem;font-weight:650;
+    padding:9px 12px;border-radius:9px;border:1px solid var(--line);color:var(--ink);background:rgba(255,255,255,.03);transition:.15s}
+  a.btn:hover{border-color:var(--brand);background:rgba(56,189,248,.1);transform:translateY(-1px)}
+  a.btn.primary{background:linear-gradient(135deg,var(--brand),var(--brand-deep));border-color:transparent;color:#fff}
+  a.btn.primary:hover{filter:brightness(1.08)}
+
+  /* ---------- Footer ---------- */
+  .foot{max-width:1000px;margin:0 auto;padding:6px 20px 50px;color:var(--muted);font-size:.82rem}
+  .foot h3{color:var(--ink);font-size:.95rem;margin:0 0 6px;display:flex;align-items:center;gap:6px}
+  .foot ul{margin:6px 0;padding-left:18px}
+  .foot .mini{margin-top:18px;font-size:.75rem;color:#5f6f8c;border-top:1px solid var(--line);padding-top:14px}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-in">
+    <div class="brand">
+      <span class="logo">
+        <!-- Logotipo: avión ascendente dentro de badge -->
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/>
+        </svg>
+      </span>
+      <span class="name"><b>Vuela</b><i>Fiel</i></span>
+    </div>
+    <span class="tag">Encuentra tu vuelo al mejor precio</span>
+  </div>
+</div>
+
+<section class="hero">
+  <h1>Tu itinerario, <span class="hl">al mejor precio</span></h1>
+  <p>VuelaFiel reúne tus tramos y te lleva directo a comparar precios en vivo en las mejores plataformas. Sin vueltas: eliges el tramo, abres la búsqueda con fecha y ruta ya cargadas, y compras donde salga más barato.</p>
+  <div class="legend">
+    <span><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="var(--done)" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/></svg><b>Ya apartado</b></span>
+    <span><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="var(--warn)" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v4M12 16h.01"/></svg><b>Pendiente por comprar</b></span>
+  </div>
+</section>
+
+<main>
+  <div class="grid">
+
+    <!-- Vuelo 1 -->
+    <div class="card done">
+      <div class="row-top">
+        <div class="route"><span class="iata">GDL</span><span class="arrow"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span><span class="iata">MEX</span></div>
+        <span class="badge b-done">Ya apartado</span>
+      </div>
+      <div class="title">Vuelo 1 — Ida a CDMX (Evento Amazon)</div>
+      <div class="meta">Fecha <strong>16 o 17 sep 2026</strong> &middot; <span class="chip">Directo</span> <span class="chip">VivaAerobus</span></div>
+      <div class="meta price">Precio apartado ~<b>$1,100 MXN</b></div>
+      <div class="note warm"><strong>Recordatorio:</strong> dejar a la perrita en pensión médica en GDL del 17 al 20 (post-operatorio).</div>
+    </div>
+
+    <!-- Vuelo 2 -->
+    <div class="card">
+      <div class="row-top">
+        <div class="route"><span class="iata">MEX</span><span class="arrow"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span><span class="iata">GDL</span></div>
+        <span class="badge b-pend">Pendiente</span>
+      </div>
+      <div class="title">Vuelo 2 — Regreso temporal a GDL</div>
+      <div class="meta">Fecha <strong>20 sep 2026</strong> &middot; <span class="chip">Directo</span></div>
+      <div class="meta price">Referencia Aeroméxico ~<b>$1,919 MXN</b></div>
+      <div class="note">Regresar a presionar la renta del departamento y atender pendientes en casa.</div>
+      <div class="btns" data-o="MEX" data-d="GDL" data-out="2026-09-20"></div>
+    </div>
+
+    <!-- Vuelo 3 -->
+    <div class="card">
+      <div class="row-top">
+        <div class="route"><span class="iata">GDL</span><span class="arrow"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span><span class="iata">TRC</span></div>
+        <span class="badge b-pend">Pendiente</span>
+      </div>
+      <div class="title">Vuelo 3 — Salida a Torreón (Boda)</div>
+      <div class="meta">Fecha <strong>2 oct 2026</strong> &middot; <span class="chip">Escala en MEX</span></div>
+      <div class="meta price">Combinado ~<b>$2,200 – $2,872 MXN</b></div>
+      <div class="note warm"><strong>Clave:</strong> la escala en MEX debe empalmar con el vuelo de Andrea para viajar juntos el último tramo. Confirmar su horario antes de comprar.</div>
+      <div class="btns" data-o="GDL" data-d="TRC" data-out="2026-10-02"></div>
+    </div>
+
+    <!-- Vuelo 4 -->
+    <div class="card">
+      <div class="row-top">
+        <div class="route"><span class="iata">TRC</span><span class="arrow"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span><span class="iata">GDL</span></div>
+        <span class="badge b-pend">Pendiente</span>
+      </div>
+      <div class="title">Vuelo 4 — Regreso definitivo a GDL (post-boda)</div>
+      <div class="meta">Fecha <strong>4 oct 2026</strong> (domingo) &middot; <span class="chip">Escala rápida en MEX</span></div>
+      <div class="meta price">Referencia ~<b>$1,489 MXN</b></div>
+      <div class="note">Regresar directo a la rutina sin perder más días.</div>
+      <div class="btns" data-o="TRC" data-d="GDL" data-out="2026-10-04"></div>
+    </div>
+
+  </div>
+</main>
+
+<section class="hero" style="padding-top:8px">
+  <h3 style="font-size:1.15rem;margin:0 0 6px;display:flex;align-items:center;gap:8px">
+    <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="var(--coral)" stroke-width="2"><path d="M12 2a10 10 0 1 0 10 10"/><path d="M12 6v6l4 2"/></svg>
+    Hacia dónde va VuelaFiel
+  </h3>
+  <p style="margin-bottom:14px">La visión: dejar de mandarte a buscar a mano y convertir VuelaFiel en un motor que encuentra el vuelo más barato por ti, comparando decenas de fechas y aerolíneas en segundos. El motor serán tres conectores de datos de vuelo (MCP) que tu asistente de IA usa por debajo:</p>
+  <div class="grid">
+    <div class="card"><div class="title">Duffel Flights MCP</div><div class="meta">Búsqueda de vuelos reales en vivo con lenguaje natural, rangos de fechas flexibles y memoria de búsquedas previas. <span class="chip">precio real</span> <span class="chip">multi-fecha</span></div></div>
+    <div class="card"><div class="title">ravinahp/flights-mcp</div><div class="meta">Servidor MCP para buscar a través de múltiples días y encontrar el mejor precio sin revisar fecha por fecha. <span class="chip">mejor precio</span></div></div>
+    <div class="card"><div class="title">Flight Finder AI (Google Flights MCP)</div><div class="meta">Consulta Google Flights para rutas más baratas y tendencias de precio. <span class="chip">tendencias</span> <span class="chip">rutas</span></div></div>
+    <div class="card"><div class="title">Cómo encaja</div><div class="meta">Estos MCP corren junto al asistente (no dentro de esta página). VuelaFiel muestra tu itinerario y, con el MCP conectado, el asistente te devuelve el tramo más barato listo para comprar.</div></div>
+  </div>
+</section>
+
+<div class="foot">
+  <h3><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="var(--brand)" stroke-width="2"><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/><circle cx="12" cy="12" r="4"/></svg>Notas de compra</h3>
+  <ul>
+    <li>Comprar cada tramo por separado permite mezclar aerolíneas y bajar el precio.</li>
+    <li>Volaris: hay vouchers de Jair y Andrea (~$2,022 c/u, vencen ~dic 2026) aplicables en volaris.com.</li>
+    <li>Google Flights, Skyscanner y Kayak cargan la ruta y fecha directo (los más confiables para comparar rápido). Los sitios de aerolíneas pueden abrir en su home.</li>
+  </ul>
+  <div class="mini">VuelaFiel &middot; prototipo. Los precios mostrados son referencias; el botón abre la búsqueda en vivo. VuelaFiel no vende ni procesa pagos: te lleva a la plataforma donde compras.</div>
+</div>
+
+<script>
+function parts(iso){const [y,m,d]=iso.split("-");return {y,m,d};}
+document.querySelectorAll(".btns").forEach(function(box){
+  const o=box.dataset.o, d=box.dataset.d, out=box.dataset.out;
+  const p=parts(out);
+  const gf   ="https://www.google.com/travel/flights?q=Flights%20"+o+"%20to%20"+d+"%20on%20"+out;
+  const sky  ="https://www.skyscanner.com.mx/transport/flights/"+o.toLowerCase()+"/"+d.toLowerCase()+"/"+p.y.slice(2)+p.m+p.d+"/?adultsv2=1&cabinclass=economy&rtn=0";
+  const kayak="https://www.kayak.com.mx/flights/"+o+"-"+d+"/"+out+"?sort=price_a";
+  const viva ="https://www.vivaaerobus.com/es-mx/";
+  const aero ="https://www.aeromexico.com/es-mx";
+  const vol  ="https://www.volaris.com/";
+  const search='<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>';
+  const mk=function(href,label,primary){
+    return '<a class="btn'+(primary?' primary':'')+'" target="_blank" rel="noopener" href="'+href+'">'+search+label+'</a>';
+  };
+  box.innerHTML =
+    mk(gf,"Google Flights",true)+
+    mk(sky,"Skyscanner",false)+
+    mk(kayak,"Kayak",false)+
+    mk(viva,"VivaAerobus",false)+
+    mk(aero,"Aeroméxico",false)+
+    mk(vol,"Volaris",false);
+});
+</script>
+</body>
+</html>
