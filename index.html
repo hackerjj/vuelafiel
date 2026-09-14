@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>VuelaAmigo — Busca tu vuelo</title>
+<title>VuelaAmigo — El cielo no es el límite, tu presupuesto sí</title>
 <style>
   :root{
     --blue-900:#0f2a5e; --blue-700:#1d5fd6; --blue-500:#4d86ec;
@@ -28,7 +28,7 @@
   .hero h1 .hl{color:var(--blue-700)}
   .hero p{color:var(--blue-500);margin:0;max-width:640px}
 
-  #clouds-bg{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:0}
+  #clouds-bg{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:-1}
   #clouds-bg svg{position:fixed;color:var(--blue-100);pointer-events:none}
   @keyframes driftAll{
     0%{transform:translateX(0) translateY(0)}25%{transform:translateX(40px) translateY(-20px)}
@@ -44,7 +44,8 @@
   .tt.active{background:var(--blue-700);color:#fff;border-color:var(--blue-700)}
 
   /* ---- Formulario ---- */
-  .searchbox{max-width:1000px;margin:10px auto 0;padding:0 20px}
+  .searchbox{max-width:1000px;margin:10px auto 0;padding:0 20px;position:relative;z-index:100}
+  .quick{z-index:1}
   form.search{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px;
     box-shadow:0 1px 3px rgba(15,42,94,.06);display:grid;gap:12px;
     grid-template-columns:1.3fr 1.3fr 1fr 1fr .8fr .9fr auto}
@@ -63,8 +64,8 @@
   @media(max-width:900px){.btn-go{grid-column:1 / -1;justify-content:center}}
 
   /* ---- Autocompletar ---- */
-  .ac{position:absolute;top:100%;left:0;right:0;z-index:40;background:#fff;border:1px solid var(--line);
-    border-radius:10px;margin-top:4px;box-shadow:0 8px 24px rgba(15,42,94,.12);overflow:hidden;display:none}
+  .ac{position:absolute;top:100%;left:0;right:0;z-index:200;background:#fff;border:1px solid var(--blue-700);
+    border-radius:10px;margin-top:4px;box-shadow:0 12px 32px rgba(15,42,94,.28);overflow:hidden;display:none}
   .ac.show{display:block}
   .ac div{padding:9px 12px;cursor:pointer;font-size:.88rem;border-bottom:1px solid var(--blue-050)}
   .ac div:last-child{border-bottom:none}
@@ -141,8 +142,8 @@
 <div id="clouds-bg" aria-hidden="true"></div>
 
 <section class="hero">
-  <h1>Busca tu vuelo, <span class="hl">al mejor precio</span></h1>
-  <p>Escribe la ciudad de origen y destino, elige fecha, y VuelaAmigo busca los vuelos reales ordenados de menor a mayor precio.</p>
+  <h1>El cielo no es el límite, <span class="hl">tu presupuesto sí</span></h1>
+  <p>Escribe tu ciudad de origen y destino, elige fecha, y VuelaAmigo compara los vuelos reales y te deja el más barato hasta arriba.</p>
 </section>
 
 <div class="triptype">
@@ -389,7 +390,7 @@
     const cloudPath="M20 26a8 8 0 0 1 .6-15.9A11 11 0 0 1 42 12a7 7 0 0 1 2 13.8V26H20z";
     for(let i=0;i<18;i++){
       const size=60+Math.random()*180, top=Math.random()*100, left=Math.random()*100;
-      const delay=Math.random()*-20, dur=22+Math.random()*16, op=(0.18+Math.random()*0.22).toFixed(2);
+      const delay=Math.random()*-20, dur=22+Math.random()*16, op=(0.35+Math.random()*0.30).toFixed(2);
       const svg=document.createElementNS("http://www.w3.org/2000/svg","svg");
       svg.setAttribute("viewBox","0 0 64 32"); svg.setAttribute("fill","currentColor");
       svg.style.cssText="width:"+size+"px;height:auto;top:"+top+"%;left:"+left+"%;opacity:"+op+";animation:driftAll "+dur.toFixed(0)+"s ease-in-out infinite;animation-delay:"+delay.toFixed(1)+"s;";
