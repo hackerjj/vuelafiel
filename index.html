@@ -28,9 +28,18 @@
   .hero h1{font-size:1.9rem;line-height:1.15;margin:0 0 6px;letter-spacing:-.02em}
   .hero h1 .hl{color:var(--blue-700)}
   .hero p{color:var(--blue-500);margin:0;max-width:640px}
-  .clouds{position:absolute;inset:0;overflow:hidden;pointer-events:none;opacity:.7}
-  .clouds svg{position:absolute;color:var(--blue-100)}
-  .c1{top:8px;right:30px;width:110px}.c2{top:64px;right:170px;width:70px}
+  /* ---- Fondo animado de nubes (CSS keyframes + JS vanilla, cero librerías) ---- */
+  #clouds-bg{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:0}
+  #clouds-bg svg{position:fixed;color:var(--blue-100);pointer-events:none}
+  @keyframes driftAll{
+    0%  {transform:translateX(0)     translateY(0)}
+    25% {transform:translateX(40px)  translateY(-20px)}
+    50% {transform:translateX(-30px) translateY(30px)}
+    75% {transform:translateX(20px)  translateY(-40px)}
+    100%{transform:translateX(0)     translateY(0)}
+  }
+  /* el contenido va por encima del fondo */
+  .topbar,.hero,.searchbox,.quick,.setup,main,.foot{position:relative;z-index:1}
 
   /* ---- Formulario de búsqueda ---- */
   .searchbox{max-width:1000px;margin:18px auto 0;padding:0 20px}
@@ -106,11 +115,9 @@
   </div>
 </div>
 
+<div id="clouds-bg" aria-hidden="true"></div>
+
 <section class="hero">
-  <div class="clouds" aria-hidden="true">
-    <svg class="c1" viewBox="0 0 64 32" fill="currentColor"><path d="M20 26a8 8 0 0 1 .6-15.9A11 11 0 0 1 42 12a7 7 0 0 1 2 13.8V26H20z"/></svg>
-    <svg class="c2" viewBox="0 0 64 32" fill="currentColor"><path d="M20 26a8 8 0 0 1 .6-15.9A11 11 0 0 1 42 12a7 7 0 0 1 2 13.8V26H20z"/></svg>
-  </div>
   <h1>Busca tu vuelo, <span class="hl">al mejor precio</span></h1>
   <p>Escribe origen, destino y fecha. VuelaAmigo busca los vuelos reales y te muestra las mejores tarifas ordenadas de menor a mayor.</p>
 </section>
@@ -273,6 +280,30 @@
     form.origin.value=b.dataset.o; form.destination.value=b.dataset.d; form.date.value=b.dataset.date;
     search({origin:b.dataset.o,destination:b.dataset.d,date:b.dataset.date,passengers:form.passengers.value,flex:form.flex.value});
   });
+
+  // ---- Fondo animado de nubes: JS vanilla genera N nubes con posición/tamaño/velocidad aleatorios ----
+  (function(){
+    const c = document.getElementById("clouds-bg");
+    if(!c) return;
+    const count = 18;
+    const cloudPath = "M20 26a8 8 0 0 1 .6-15.9A11 11 0 0 1 42 12a7 7 0 0 1 2 13.8V26H20z";
+    for(let i=0;i<count;i++){
+      const size = 60 + Math.random()*180;      // 60–240px de ancho
+      const top  = Math.random()*100;
+      const left = Math.random()*100;
+      const delay= Math.random()*-20;            // desfase para que no se muevan iguales
+      const dur  = 22 + Math.random()*16;        // 22–38s (lento)
+      const op   = (0.18 + Math.random()*0.22).toFixed(2); // sutil, dentro de la gama azul
+      const svg = document.createElementNS("http://www.w3.org/2000/svg","svg");
+      svg.setAttribute("viewBox","0 0 64 32");
+      svg.setAttribute("fill","currentColor");
+      svg.style.cssText =
+        "width:"+size+"px;height:auto;top:"+top+"%;left:"+left+"%;opacity:"+op+";"+
+        "animation:driftAll "+dur.toFixed(0)+"s ease-in-out infinite;animation-delay:"+delay.toFixed(1)+"s;";
+      svg.innerHTML = '<path d="'+cloudPath+'"></path>';
+      c.appendChild(svg);
+    }
+  })();
 </script>
 </body>
 </html>
