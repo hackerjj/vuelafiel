@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="pt">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>VuelaAmigo — El cielo no es el límite, tu presupuesto sí</title>
+<title>VuelaAmigo</title>
 <!-- Travelpayouts Drive (verificación de sitio + monetización) -->
 <script data-noptimize="1" data-cfasync="false" data-wpfc-render="false">
   (function () {
@@ -30,8 +30,21 @@
   .brand .name b{color:var(--blue-700)}
   .logo{width:40px;height:40px;flex:none;border-radius:12px;background:var(--blue-700);display:grid;place-items:center}
   .logo svg{width:24px;height:24px;color:#fff;margin:0}
-  .tag{color:var(--blue-500);font-size:.8rem;display:none}
-  @media(min-width:640px){.tag{display:block}}
+
+  /* selector idioma+bandera (arriba a la derecha) */
+  .lang{position:relative}
+  .lang-btn{display:flex;align-items:center;gap:7px;border:1px solid var(--line);background:#fff;border-radius:9px;
+    padding:6px 10px;cursor:pointer;font-size:.85rem;font-weight:650;color:var(--blue-900)}
+  .lang-btn:hover{border-color:var(--blue-700)}
+  .flag{font-size:1.1rem;line-height:1}
+  .lang-menu{position:absolute;top:100%;right:0;margin-top:6px;background:#fff;border:1px solid var(--line);
+    border-radius:10px;box-shadow:0 12px 32px rgba(15,42,94,.2);overflow:hidden;display:none;z-index:60;min-width:190px}
+  .lang-menu.show{display:block}
+  .lang-menu button{display:flex;align-items:center;gap:9px;width:100%;border:none;background:#fff;text-align:left;
+    padding:10px 12px;cursor:pointer;font-size:.86rem;color:var(--blue-900);border-bottom:1px solid var(--blue-050)}
+  .lang-menu button:last-child{border-bottom:none}
+  .lang-menu button:hover{background:var(--blue-050)}
+  .lang-menu .cur{margin-left:auto;color:var(--blue-500);font-size:.74rem;font-weight:700}
 
   .hero{max-width:1000px;margin:0 auto;padding:34px 20px 6px;position:relative}
   .hero h1{font-size:1.9rem;line-height:1.15;margin:0 0 6px;letter-spacing:-.02em}
@@ -40,53 +53,37 @@
 
   #clouds-bg{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:-1}
   #clouds-bg svg{position:fixed;color:var(--blue-100);pointer-events:none}
-  @keyframes driftAll{
-    0%{transform:translateX(0) translateY(0)}25%{transform:translateX(40px) translateY(-20px)}
-    50%{transform:translateX(-30px) translateY(30px)}75%{transform:translateX(20px) translateY(-40px)}
-    100%{transform:translateX(0) translateY(0)}
-  }
-  .topbar,.hero,.searchbox,.quick,.setup,main,.foot{position:relative;z-index:1}
+  @keyframes driftAll{0%{transform:translate(0,0)}25%{transform:translate(40px,-20px)}50%{transform:translate(-30px,30px)}75%{transform:translate(20px,-40px)}100%{transform:translate(0,0)}}
+  .topbar,.hero,.searchbox,.quick,main,.foot{position:relative;z-index:1}
 
-  /* ---- Tipo de viaje ---- */
   .triptype{max-width:1000px;margin:16px auto 0;padding:0 20px;display:flex;gap:8px}
-  .tt{border:1px solid var(--line);background:#fff;color:var(--blue-700);border-radius:9px;padding:7px 14px;
-    font-size:.85rem;font-weight:700;cursor:pointer;transition:.15s}
+  .tt{border:1px solid var(--line);background:#fff;color:var(--blue-700);border-radius:9px;padding:7px 14px;font-size:.85rem;font-weight:700;cursor:pointer;transition:.15s}
   .tt.active{background:var(--blue-700);color:#fff;border-color:var(--blue-700)}
 
-  /* ---- Formulario ---- */
   .searchbox{max-width:1000px;margin:10px auto 0;padding:0 20px;position:relative;z-index:100}
-  .quick{z-index:1}
   form.search{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px;
-    box-shadow:0 1px 3px rgba(15,42,94,.06);display:grid;gap:12px;
-    grid-template-columns:repeat(7,1fr) auto}
+    box-shadow:0 1px 3px rgba(15,42,94,.06);display:grid;gap:12px;grid-template-columns:repeat(6,1fr) auto}
   @media(max-width:900px){form.search{grid-template-columns:1fr 1fr}}
   .field{display:flex;flex-direction:column;gap:4px;position:relative}
   .field label{font-size:.72rem;font-weight:700;color:var(--blue-500);text-transform:uppercase;letter-spacing:.04em}
-  .field input,.field select{border:1px solid var(--line);border-radius:9px;padding:10px 11px;font-size:.95rem;
-    color:var(--blue-900);background:#fff;outline:none;font-family:inherit;width:100%}
+  .field input,.field select{border:1px solid var(--line);border-radius:9px;padding:10px 11px;font-size:.95rem;color:var(--blue-900);background:#fff;outline:none;font-family:inherit;width:100%}
   .field input:focus,.field select:focus{border-color:var(--blue-700);box-shadow:0 0 0 3px var(--blue-100)}
   .field input::placeholder{color:#9db4e0}
   .field.hidden{display:none}
-  .btn-go{align-self:end;background:var(--blue-700);color:#fff;border:none;border-radius:9px;padding:11px 18px;
-    font-size:.95rem;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:.15s}
-  .btn-go:hover{background:var(--blue-900)}
-  .btn-go:disabled{opacity:.6;cursor:default}
+  .btn-go{align-self:end;background:var(--blue-700);color:#fff;border:none;border-radius:9px;padding:11px 18px;font-size:.95rem;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:.15s}
+  .btn-go:hover{background:var(--blue-900)}.btn-go:disabled{opacity:.6;cursor:default}
   @media(max-width:900px){.btn-go{grid-column:1 / -1;justify-content:center}}
 
-  /* ---- Autocompletar ---- */
-  .ac{position:absolute;top:100%;left:0;right:0;z-index:200;background:#fff;border:1px solid var(--blue-700);
-    border-radius:10px;margin-top:4px;box-shadow:0 12px 32px rgba(15,42,94,.28);overflow:hidden;display:none}
+  .ac{position:absolute;top:100%;left:0;right:0;z-index:200;background:#fff;border:1px solid var(--blue-700);border-radius:10px;margin-top:4px;box-shadow:0 12px 32px rgba(15,42,94,.28);overflow:hidden;display:none}
   .ac.show{display:block}
   .ac div{padding:9px 12px;cursor:pointer;font-size:.88rem;border-bottom:1px solid var(--blue-050)}
-  .ac div:last-child{border-bottom:none}
-  .ac div:hover,.ac div.hl{background:var(--blue-050)}
+  .ac div:last-child{border-bottom:none}.ac div:hover,.ac div.hl{background:var(--blue-050)}
   .ac .iata{font-weight:800;color:var(--blue-700);margin-right:6px}
   .ac .sub{color:var(--blue-500);font-size:.78rem}
 
   .quick{max-width:1000px;margin:12px auto 0;padding:0 20px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
   .quick span{font-size:.78rem;color:var(--blue-500);font-weight:600}
-  .chip-q{border:1px solid var(--line);background:var(--blue-050);color:var(--blue-700);border-radius:20px;
-    padding:5px 12px;font-size:.8rem;font-weight:650;cursor:pointer;transition:.15s}
+  .chip-q{border:1px solid var(--line);background:var(--blue-050);color:var(--blue-700);border-radius:20px;padding:5px 12px;font-size:.8rem;font-weight:650;cursor:pointer;transition:.15s}
   .chip-q:hover{border-color:var(--blue-700);background:var(--blue-100)}
 
   main{max-width:1000px;margin:0 auto;padding:20px}
@@ -98,39 +95,28 @@
   .day .d{font-size:.74rem;color:var(--blue-500);font-weight:650}
   .day .p{font-size:1rem;color:var(--blue-900);font-weight:800;margin-top:2px}
   .day .p small{font-size:.62rem;color:var(--blue-500);font-weight:600}
-
   .results{display:grid;gap:10px}
-  .offer{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 16px;
-    display:grid;grid-template-columns:1fr auto auto;gap:14px;align-items:center;box-shadow:0 1px 2px rgba(15,42,94,.04)}
+  .offer{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 16px;display:grid;grid-template-columns:1fr auto auto;gap:14px;align-items:center;box-shadow:0 1px 2px rgba(15,42,94,.04)}
   @media(max-width:600px){.offer{grid-template-columns:1fr auto}}
   .offer.best{border-color:var(--blue-700);box-shadow:0 0 0 2px var(--blue-100)}
   .offer .air{font-weight:700;color:var(--blue-900);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
   .tagbest{font-size:.68rem;font-weight:800;background:var(--blue-700);color:#fff;border-radius:20px;padding:2px 9px}
-  .offer .times{color:var(--blue-500);font-size:.86rem;margin-top:2px}
-  .offer .times b{color:var(--blue-900);font-weight:650}
-  .offer .stops{font-size:.76rem;color:var(--blue-500)}
-  .offer .ret{font-size:.76rem;color:var(--blue-500);margin-top:3px}
+  .offer .times{color:var(--blue-500);font-size:.86rem;margin-top:2px}.offer .times b{color:var(--blue-900);font-weight:650}
+  .offer .stops,.offer .ret{font-size:.76rem;color:var(--blue-500)}
   .offer .price{text-align:right}
   .offer .price .amt{font-size:1.25rem;font-weight:800;color:var(--blue-900)}
   .offer .price .cur{font-size:.72rem;color:var(--blue-500);font-weight:600}
-  .buy{background:var(--blue-700);color:#fff;text-decoration:none;border-radius:9px;padding:9px 14px;
-    font-size:.82rem;font-weight:700;white-space:nowrap;display:inline-flex;align-items:center;gap:5px;transition:.15s}
+  .buy{background:var(--blue-700);color:#fff;text-decoration:none;border-radius:9px;padding:9px 14px;font-size:.82rem;font-weight:700;white-space:nowrap;display:inline-flex;align-items:center;gap:5px;transition:.15s}
   .buy:hover{background:var(--blue-900)}
   @media(max-width:600px){.buy{grid-column:1 / -1;justify-content:center}}
-  .skeleton{height:74px;border-radius:14px;background:linear-gradient(90deg,var(--blue-050),var(--blue-100),var(--blue-050));
-    background-size:200% 100%;animation:sh 1.2s infinite}
+  .skeleton{height:74px;border-radius:14px;background:linear-gradient(90deg,var(--blue-050),var(--blue-100),var(--blue-050));background-size:200% 100%;animation:sh 1.2s infinite}
   @keyframes sh{0%{background-position:200% 0}100%{background-position:-200% 0}}
-
-  /* ---- Historial guardado ---- */
   .saved{max-width:1000px;margin:6px auto 0;padding:0 20px}
   .saved h3{font-size:.9rem;color:var(--blue-900);margin:0 0 8px;display:flex;align-items:center;gap:6px}
   .saved-list{display:flex;gap:8px;flex-wrap:wrap}
-  .saved-item{border:1px solid var(--line);background:#fff;border-radius:10px;padding:6px 10px;font-size:.8rem;
-    color:var(--blue-700);display:flex;align-items:center;gap:8px}
-  .saved-item b{color:var(--blue-900)}
-  .saved-item .go{cursor:pointer;font-weight:700}
+  .saved-item{border:1px solid var(--line);background:#fff;border-radius:10px;padding:6px 10px;font-size:.8rem;color:var(--blue-700);display:flex;align-items:center;gap:8px}
+  .saved-item b{color:var(--blue-900)}.saved-item .go{cursor:pointer;font-weight:700}
   .saved-item .rm{cursor:pointer;color:var(--blue-500);border:none;background:none;font-size:1rem;line-height:1;padding:0}
-
   .foot{max-width:1000px;margin:0 auto;padding:6px 20px 50px;color:var(--blue-500);font-size:.8rem}
   .foot .mini{border-top:1px solid var(--line);padding-top:14px}
 </style>
@@ -140,88 +126,81 @@
 <div class="topbar">
   <div class="topbar-in">
     <div class="brand">
-      <span class="logo">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.7 2.3a1 1 0 0 0-1.05-.23L2.75 8.9a1 1 0 0 0 .06 1.88l6.3 2.1 2.1 6.3a1 1 0 0 0 1.88.06l6.83-17.9a1 1 0 0 0-.22-1.04zM10.5 12.1 5.9 10.6 17 6.4l-6.5 5.7zm2.9 5.5-1.5-4.5 5.7-6.5-4.2 11z"/></svg>
-      </span>
+      <span class="logo"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.7 2.3a1 1 0 0 0-1.05-.23L2.75 8.9a1 1 0 0 0 .06 1.88l6.3 2.1 2.1 6.3a1 1 0 0 0 1.88.06l6.83-17.9a1 1 0 0 0-.22-1.04zM10.5 12.1 5.9 10.6 17 6.4l-6.5 5.7zm2.9 5.5-1.5-4.5 5.7-6.5-4.2 11z"/></svg></span>
       <span class="name"><b>VuelaAmigo</b></span>
     </div>
-    <span class="tag">Busca tu vuelo al mejor precio</span>
+    <div class="lang">
+      <button class="lang-btn" id="lang-btn"><span class="flag" id="lang-flag">🇧🇷</span><span id="lang-name">Português</span>
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin:0;width:.9em"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+      <div class="lang-menu" id="lang-menu">
+        <button data-lang="pt"><span class="flag">🇧🇷</span>Português <span class="cur">BRL</span></button>
+        <button data-lang="es"><span class="flag">🇲🇽</span>Español <span class="cur">MXN</span></button>
+        <button data-lang="en"><span class="flag">🇺🇸</span>English <span class="cur">USD</span></button>
+        <button data-lang="de"><span class="flag">🇩🇪</span>Deutsch <span class="cur">EUR</span></button>
+      </div>
+    </div>
   </div>
 </div>
 
 <div id="clouds-bg" aria-hidden="true"></div>
 
 <section class="hero">
-  <h1>El cielo no es el límite, <span class="hl">tu presupuesto sí</span></h1>
-  <p>Escribe tu ciudad de origen y destino, elige fecha, y VuelaAmigo compara los vuelos reales y te deja el más barato hasta arriba.</p>
+  <h1 id="h-title"></h1>
+  <p id="h-sub"></p>
 </section>
 
 <div class="triptype">
-  <button class="tt active" id="tt-one" type="button">Solo ida</button>
-  <button class="tt" id="tt-round" type="button">Redondo</button>
+  <button class="tt active" id="tt-one" type="button"></button>
+  <button class="tt" id="tt-round" type="button"></button>
 </div>
 
 <div class="searchbox">
   <form class="search" id="form" autocomplete="off">
     <div class="field">
-      <label for="originText">Origen</label>
-      <input id="originText" placeholder="Ciudad o aeropuerto" required>
+      <label id="l-origin" for="originText"></label>
+      <input id="originText" required>
       <input type="hidden" id="origin">
       <div class="ac" id="ac-origin"></div>
     </div>
     <div class="field">
-      <label for="destText">Destino</label>
-      <input id="destText" placeholder="Ciudad o aeropuerto" required>
+      <label id="l-dest" for="destText"></label>
+      <input id="destText" required>
       <input type="hidden" id="destination">
       <div class="ac" id="ac-dest"></div>
     </div>
     <div class="field">
-      <label for="date">Salida</label>
+      <label id="l-depart" for="date"></label>
       <input id="date" type="date" required>
     </div>
     <div class="field hidden" id="fld-return">
-      <label for="returnDate">Regreso</label>
+      <label id="l-return" for="returnDate"></label>
       <input id="returnDate" type="date">
     </div>
     <div class="field">
-      <label for="passengers">Pasajeros</label>
+      <label id="l-pax" for="passengers"></label>
       <select id="passengers"><option>1</option><option>2</option><option>3</option><option>4</option></select>
     </div>
     <div class="field">
-      <label for="flex">Flexible</label>
-      <select id="flex">
-        <option value="0">Fecha exacta</option>
-        <option value="1">± 1 día</option>
-        <option value="2">± 2 días</option>
-        <option value="3" selected>± 3 días</option>
-      </select>
-    </div>
-    <div class="field">
-      <label for="currency">Moneda</label>
-      <select id="currency">
-        <option value="MXN" selected>MXN $ (México)</option>
-        <option value="USD">USD $ (Dólar)</option>
-        <option value="EUR">EUR € (Euro)</option>
-        <option value="BRL">BRL R$ (Brasil)</option>
-        <option value="CLP">CLP $ (Chile)</option>
-      </select>
+      <label id="l-flex" for="flex"></label>
+      <select id="flex"><option value="0"></option><option value="1"></option><option value="2"></option><option value="3" selected></option></select>
     </div>
     <button class="btn-go" id="go" type="submit">
       <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
-      Buscar
+      <span id="l-search"></span>
     </button>
   </form>
 </div>
 
 <div class="quick" id="quick">
-  <span>Mis tramos:</span>
-  <button class="chip-q" data-o="MEX" data-ot="Ciudad de México (MEX)" data-d="GDL" data-dt="Guadalajara (GDL)" data-date="2026-09-20">MEX → GDL · 20 sep</button>
-  <button class="chip-q" data-o="GDL" data-ot="Guadalajara (GDL)" data-d="TRC" data-dt="Torreón (TRC)" data-date="2026-10-02">GDL → TRC · 2 oct</button>
-  <button class="chip-q" data-o="TRC" data-ot="Torreón (TRC)" data-d="GDL" data-dt="Guadalajara (GDL)" data-date="2026-10-04">TRC → GDL · 4 oct</button>
+  <span id="l-mytrips"></span>
+  <button class="chip-q" data-o="MEX" data-ot="Ciudad de México (MEX)" data-d="GDL" data-dt="Guadalajara (GDL)" data-date="2026-09-20">MEX → GDL · 20/09</button>
+  <button class="chip-q" data-o="GDL" data-ot="Guadalajara (GDL)" data-d="TRC" data-dt="Torreón (TRC)" data-date="2026-10-02">GDL → TRC · 02/10</button>
+  <button class="chip-q" data-o="TRC" data-ot="Torreón (TRC)" data-d="GDL" data-dt="Guadalajara (GDL)" data-date="2026-10-04">TRC → GDL · 04/10</button>
 </div>
 
 <div class="saved" id="saved" style="display:none">
-  <h3><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="var(--blue-700)" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>Búsquedas guardadas</h3>
+  <h3><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="var(--blue-700)" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg><span id="l-saved"></span></h3>
   <div class="saved-list" id="saved-list"></div>
 </div>
 
@@ -231,225 +210,215 @@
   <div class="results" id="results"></div>
 </main>
 
-<div class="foot">
-  <div class="mini">VuelaAmigo &middot; resultados vía Duffel. En modo test las aerolíneas y precios son de un entorno de pruebas. Los precios en otras monedas son una conversión de referencia (tasas del día); el cobro final lo hace la aerolínea en su moneda. El botón Comprar te lleva a completar la reserva; VuelaAmigo aún no procesa pagos.</div>
-</div>
+<div class="foot"><div class="mini" id="l-foot"></div></div>
 
 <script>
   const BACKEND_URL = "https://vuelaamigo.mexintouch.workers.dev";
-
-  // === Afiliado (Travelpayouts/Aviasales). Pega tu marker aquí cuando lo tengas. ===
-  // Mientras esté vacío, el botón "Comprar" manda a Google Flights de esa ruta/fecha.
   const TP_MARKER = "573712";
-
   const $ = (id) => document.getElementById(id);
-  const form=$("form"), statusEl=$("status"), results=$("results"), byday=$("byday");
-  let tripType="oneway";
+
+  // ---------- i18n ----------
+  const I18N = {
+    pt:{ flag:"🇧🇷", name:"Português", cur:"BRL",
+      title1:"O céu não é o limite,", title2:"seu orçamento sim",
+      sub:"Digite a cidade de origem e destino, escolha a data e o VuelaAmigo compara os voos reais e coloca o mais barato no topo.",
+      oneway:"Só ida", round:"Ida e volta", origin:"Origem", dest:"Destino", depart:"Ida", ret:"Volta",
+      pax:"Passageiros", flex:"Flexível", exact:"Data exata", d1:"± 1 dia", d2:"± 2 dias", d3:"± 3 dias",
+      search:"Buscar", mytrips:"Meus trechos:", saved:"Buscas salvas", cityph:"Cidade ou aeroporto",
+      buy:"Comprar", cheapest:"MAIS BARATO", best:"· mais barato", direct:"Direto", stop:"escala", stops:"escalas",
+      returnlbl:"Volta:", searching:"Buscando voos", found:"voos (do mais barato ao mais caro) · preços em",
+      none:"Sem voos para essa rota e data.", pickfromlist:"Escolha origem e destino da lista.",
+      err:"Não foi possível buscar:",
+      foot:"VuelaAmigo · resultados via Duffel. No modo teste as companhias e preços são de um ambiente de teste. Os preços em outras moedas são conversão de referência. O botão Comprar leva você a finalizar a reserva." },
+    es:{ flag:"🇲🇽", name:"Español", cur:"MXN",
+      title1:"El cielo no es el límite,", title2:"tu presupuesto sí",
+      sub:"Escribe tu ciudad de origen y destino, elige fecha, y VuelaAmigo compara los vuelos reales y deja el más barato hasta arriba.",
+      oneway:"Solo ida", round:"Redondo", origin:"Origen", dest:"Destino", depart:"Salida", ret:"Regreso",
+      pax:"Pasajeros", flex:"Flexible", exact:"Fecha exacta", d1:"± 1 día", d2:"± 2 días", d3:"± 3 días",
+      search:"Buscar", mytrips:"Mis tramos:", saved:"Búsquedas guardadas", cityph:"Ciudad o aeropuerto",
+      buy:"Comprar", cheapest:"MÁS BARATO", best:"· más barato", direct:"Directo", stop:"escala", stops:"escalas",
+      returnlbl:"Regreso:", searching:"Buscando vuelos", found:"vuelos (del más barato al más caro) · precios en",
+      none:"Sin vuelos para esa ruta y fecha.", pickfromlist:"Elige origen y destino de la lista.",
+      err:"No se pudo buscar:",
+      foot:"VuelaAmigo · resultados vía Duffel. En modo test las aerolíneas y precios son de prueba. Los precios en otras monedas son conversión de referencia. El botón Comprar te lleva a completar la reserva." },
+    en:{ flag:"🇺🇸", name:"English", cur:"USD",
+      title1:"The sky is not the limit,", title2:"your budget is",
+      sub:"Type your origin and destination city, pick a date, and VuelaAmigo compares real flights and puts the cheapest on top.",
+      oneway:"One way", round:"Round trip", origin:"Origin", dest:"Destination", depart:"Depart", ret:"Return",
+      pax:"Passengers", flex:"Flexible", exact:"Exact date", d1:"± 1 day", d2:"± 2 days", d3:"± 3 days",
+      search:"Search", mytrips:"My trips:", saved:"Saved searches", cityph:"City or airport",
+      buy:"Book", cheapest:"CHEAPEST", best:"· cheapest", direct:"Direct", stop:"stop", stops:"stops",
+      returnlbl:"Return:", searching:"Searching flights", found:"flights (cheapest to most expensive) · prices in",
+      none:"No flights for that route and date.", pickfromlist:"Pick origin and destination from the list.",
+      err:"Search failed:",
+      foot:"VuelaAmigo · results via Duffel. In test mode airlines and prices are from a test environment. Prices in other currencies are a reference conversion. The Book button takes you to complete the reservation." },
+    de:{ flag:"🇩🇪", name:"Deutsch", cur:"EUR",
+      title1:"Der Himmel ist nicht die Grenze,", title2:"dein Budget schon",
+      sub:"Gib Start- und Zielstadt ein, wähle ein Datum, und VuelaAmigo vergleicht echte Flüge und zeigt den günstigsten oben.",
+      oneway:"Nur Hinflug", round:"Hin und zurück", origin:"Von", dest:"Nach", depart:"Hinflug", ret:"Rückflug",
+      pax:"Passagiere", flex:"Flexibel", exact:"Genaues Datum", d1:"± 1 Tag", d2:"± 2 Tage", d3:"± 3 Tage",
+      search:"Suchen", mytrips:"Meine Strecken:", saved:"Gespeicherte Suchen", cityph:"Stadt oder Flughafen",
+      buy:"Buchen", cheapest:"GÜNSTIGSTE", best:"· günstigste", direct:"Direkt", stop:"Stopp", stops:"Stopps",
+      returnlbl:"Rückflug:", searching:"Suche Flüge", found:"Flüge (günstigste zuerst) · Preise in",
+      none:"Keine Flüge für diese Route und dieses Datum.", pickfromlist:"Wähle Start und Ziel aus der Liste.",
+      err:"Suche fehlgeschlagen:",
+      foot:"VuelaAmigo · Ergebnisse über Duffel. Im Testmodus sind Airlines und Preise aus einer Testumgebung. Preise in anderen Währungen sind eine Referenzumrechnung. Der Buchen-Button führt zur Reservierung." },
+  };
+  const LANG_CUR={pt:"BRL",es:"MXN",en:"USD",de:"EUR"};
+  const LOCALE={pt:"pt-BR",es:"es-MX",en:"en-US",de:"de-DE"};
+  let lang = localStorage.getItem("va_lang") || "pt";
+  let cur  = LANG_CUR[lang];
+  const T = () => I18N[lang];
+
+  function applyLang(){
+    const t=T();
+    document.documentElement.lang=lang;
+    $("lang-flag").textContent=t.flag; $("lang-name").textContent=t.name;
+    $("h-title").innerHTML=t.title1+' <span class="hl">'+t.title2+'</span>';
+    $("h-sub").textContent=t.sub;
+    $("tt-one").textContent=t.oneway; $("tt-round").textContent=t.round;
+    $("l-origin").textContent=t.origin; $("l-dest").textContent=t.dest;
+    $("l-depart").textContent=t.depart; $("l-return").textContent=t.ret;
+    $("l-pax").textContent=t.pax; $("l-flex").textContent=t.flex;
+    $("originText").placeholder=t.cityph; $("destText").placeholder=t.cityph;
+    const fo=$("flex").options; fo[0].text=t.exact; fo[1].text=t.d1; fo[2].text=t.d2; fo[3].text=t.d3;
+    $("l-search").textContent=t.search; $("l-mytrips").textContent=t.mytrips;
+    $("l-saved").textContent=t.saved; $("l-foot").textContent=t.foot;
+    // re-render si hay resultados
+    if(lastOffers.length){ renderByDay(lastByDay); render(lastOffers); }
+    renderSaved();
+  }
+
+  // menú idioma
+  $("lang-btn").addEventListener("click",(e)=>{e.stopPropagation();$("lang-menu").classList.toggle("show");});
+  document.addEventListener("click",()=>$("lang-menu").classList.remove("show"));
+  $("lang-menu").addEventListener("click",(e)=>{
+    const b=e.target.closest("button"); if(!b) return;
+    lang=b.dataset.lang; cur=LANG_CUR[lang];
+    localStorage.setItem("va_lang",lang);
+    $("lang-menu").classList.remove("show");
+    applyLang();
+  });
 
   // ---------- Divisas ----------
   const CUR_SYMBOL={MXN:"$",USD:"$",EUR:"€",BRL:"R$",CLP:"$"};
   let rates={USD:1}, lastOffers=[], lastByDay=[];
-  function targetCur(){ return $("currency").value || "MXN"; }
-  async function loadRates(){
-    try{
-      const r=await fetch("https://open.er-api.com/v6/latest/USD");
-      const d=await r.json();
-      if(d && d.rates) rates=d.rates;
-    }catch{ /* si falla, se queda en USD */ }
-  }
+  async function loadRates(){ try{const r=await fetch("https://open.er-api.com/v6/latest/USD");const d=await r.json();if(d&&d.rates)rates=d.rates;}catch{} }
   loadRates();
-  // convierte un monto dado en su moneda origen (from) a la moneda elegida
-  function convert(amount, from){
-    const cur=targetCur();
-    const rFrom=rates[from]||1, rTo=rates[cur]||1;
-    // amount está en 'from'; pasar a USD y luego a cur
-    const usd=amount/(rFrom||1);
-    return usd*(rTo||1);
-  }
-  function fmtMoney(amount, from, decimals){
-    const v=convert(amount, from), cur=targetCur();
-    const dec = decimals==null ? (cur==="CLP"?0:2) : decimals;
-    return CUR_SYMBOL[cur]+v.toLocaleString("es-MX",{minimumFractionDigits:dec,maximumFractionDigits:dec})+" "+cur;
-  }
-  $("currency").addEventListener("change",()=>{ if(lastOffers.length){ renderByDay(lastByDay); render(lastOffers); } });
+  function convert(amount, from){ const rF=rates[from]||1,rT=rates[cur]||1; return (amount/rF)*rT; }
+  function money(amount, from){ const v=convert(amount,from); const dec=cur==="CLP"?0:2; return CUR_SYMBOL[cur]+v.toLocaleString(LOCALE[lang],{minimumFractionDigits:dec,maximumFractionDigits:dec}); }
 
   // ---------- Tipo de viaje ----------
+  let tripType="oneway";
   $("tt-one").addEventListener("click",()=>setTrip("oneway"));
   $("tt-round").addEventListener("click",()=>setTrip("round"));
-  function setTrip(t){
-    tripType=t;
-    $("tt-one").classList.toggle("active",t==="oneway");
-    $("tt-round").classList.toggle("active",t==="round");
-    $("fld-return").classList.toggle("hidden",t!=="round");
-    if(t==="round") $("returnDate").required=true; else $("returnDate").required=false;
-  }
+  function setTrip(t){ tripType=t; $("tt-one").classList.toggle("active",t==="oneway"); $("tt-round").classList.toggle("active",t==="round"); $("fld-return").classList.toggle("hidden",t!=="round"); $("returnDate").required=(t==="round"); }
 
   // ---------- Autocompletar ----------
-  function setupAC(textId, hiddenId, boxId){
-    const t=$(textId), h=$(hiddenId), box=$(boxId); let timer=null, items=[], hi=-1;
-    t.addEventListener("input",()=>{
-      h.value=""; // hasta elegir de la lista no hay IATA
-      const q=t.value.trim();
-      clearTimeout(timer);
-      if(q.length<2){ box.classList.remove("show"); return; }
-      timer=setTimeout(async()=>{
-        try{
-          const r=await fetch(BACKEND_URL+"/places?q="+encodeURIComponent(q));
-          items=await r.json(); hi=-1; renderAC();
-        }catch{ box.classList.remove("show"); }
-      },220);
+  function setupAC(textId,hiddenId,boxId){
+    const t=$(textId),h=$(hiddenId),box=$(boxId); let timer=null,items=[],hi=-1;
+    t.addEventListener("input",()=>{ h.value=""; const q=t.value.trim(); clearTimeout(timer);
+      if(q.length<2){box.classList.remove("show");return;}
+      timer=setTimeout(async()=>{ try{const r=await fetch(BACKEND_URL+"/places?q="+encodeURIComponent(q));items=await r.json();hi=-1;renderAC();}catch{box.classList.remove("show");} },220);
     });
-    t.addEventListener("keydown",(e)=>{
-      if(!box.classList.contains("show")) return;
+    t.addEventListener("keydown",(e)=>{ if(!box.classList.contains("show"))return;
       if(e.key==="ArrowDown"){hi=Math.min(hi+1,items.length-1);paint();e.preventDefault();}
       else if(e.key==="ArrowUp"){hi=Math.max(hi-1,0);paint();e.preventDefault();}
-      else if(e.key==="Enter"){ if(hi>=0){choose(items[hi]);e.preventDefault();} }
-      else if(e.key==="Escape"){box.classList.remove("show");}
-    });
-    function renderAC(){
-      if(!items.length){box.classList.remove("show");box.innerHTML="";return;}
+      else if(e.key==="Enter"){if(hi>=0){choose(items[hi]);e.preventDefault();}}
+      else if(e.key==="Escape"){box.classList.remove("show");} });
+    function renderAC(){ if(!items.length){box.classList.remove("show");box.innerHTML="";return;}
       box.innerHTML=items.map((p,i)=>`<div data-i="${i}"><span class="iata">${p.iata}</span>${p.city} <span class="sub">· ${p.name}${p.country?(" · "+p.country):""}</span></div>`).join("");
       box.classList.add("show");
-      box.querySelectorAll("div").forEach(el=>el.addEventListener("mousedown",(ev)=>{ev.preventDefault();choose(items[+el.dataset.i]);}));
-    }
+      box.querySelectorAll("div").forEach(el=>el.addEventListener("mousedown",(ev)=>{ev.preventDefault();choose(items[+el.dataset.i]);})); }
     function paint(){ box.querySelectorAll("div").forEach((el,i)=>el.classList.toggle("hl",i===hi)); }
     function choose(p){ h.value=p.iata; t.value=p.city+" ("+p.iata+")"; box.classList.remove("show"); }
-    document.addEventListener("click",(e)=>{ if(!t.contains(e.target)&&!box.contains(e.target)) box.classList.remove("show"); });
+    document.addEventListener("click",(e)=>{ if(!t.contains(e.target)&&!box.contains(e.target))box.classList.remove("show"); });
   }
   setupAC("originText","origin","ac-origin");
   setupAC("destText","destination","ac-dest");
 
-  // ---------- Utilidades ----------
-  const fmtTime=(iso)=>new Date(iso).toLocaleString("es-MX",{day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"});
-  const fmtDay=(iso)=>new Date(iso+"T00:00:00").toLocaleDateString("es-MX",{weekday:"short",day:"2-digit",month:"short"});
-  const stopsLabel=(n)=>n===0?"Directo":(n+" escala"+(n>1?"s":""));
+  const fmtTime=(iso)=>new Date(iso).toLocaleString(LOCALE[lang],{day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"});
+  const fmtDay=(iso)=>new Date(iso+"T00:00:00").toLocaleDateString(LOCALE[lang],{weekday:"short",day:"2-digit",month:"short"});
+  const stopsLabel=(n)=>n===0?T().direct:(n+" "+(n>1?T().stops:T().stop));
 
-  // ---------- Link de compra (afiliado o Google Flights) ----------
   function buyLink(o){
     if(TP_MARKER){
-      // Aviasales/Travelpayouts deep link: /search/ORIGENddmmDESTINOddmm1
-      const dep=o.date.slice(8,10)+o.date.slice(5,7);
-      let path=o.origin+dep+o.destination;
-      if(o.roundtrip && o.returnDate){ path+=o.returnDate.slice(8,10)+o.returnDate.slice(5,7); }
-      path+="1";
-      return "https://www.aviasales.com/search/"+path+"?marker="+encodeURIComponent(TP_MARKER);
+      const dep=o.date.slice(8,10)+o.date.slice(5,7); let path=o.origin+dep+o.destination;
+      if(o.roundtrip&&o.returnDate){path+=o.returnDate.slice(8,10)+o.returnDate.slice(5,7);} path+="1";
+      return "https://www.aviasales.com/search/"+path+"?marker="+encodeURIComponent(TP_MARKER)+"&locale="+lang;
     }
-    // Fallback neutral: Google Flights de esa ruta/fecha
-    let q="Flights "+o.origin+" to "+o.destination+" on "+o.date;
-    if(o.roundtrip && o.returnDate) q+=" returning "+o.returnDate;
+    let q="Flights "+o.origin+" to "+o.destination+" on "+o.date; if(o.roundtrip&&o.returnDate)q+=" returning "+o.returnDate;
     return "https://www.google.com/travel/flights?q="+encodeURIComponent(q);
   }
+  function skeletons(){ results.innerHTML=""; for(let i=0;i<4;i++){const s=document.createElement("div");s.className="skeleton";$("results").appendChild(s);} }
 
-  function skeletons(){ results.innerHTML=""; for(let i=0;i<4;i++){const s=document.createElement("div");s.className="skeleton";results.appendChild(s);} }
+  const results=$("results"), statusEl=$("status"), byday=$("byday"), form=$("form");
 
   async function search(p){
-    if(!p.origin||!p.destination){ statusEl.className="status error"; statusEl.textContent="Elige origen y destino de la lista (para tener el código de aeropuerto)."; return; }
-    statusEl.className="status";
-    statusEl.textContent="Buscando "+p.origin+" → "+p.destination+(Number(p.flex)?" (± "+p.flex+" días)":"")+"…";
+    if(!p.origin||!p.destination){ statusEl.className="status error"; statusEl.textContent=T().pickfromlist; return; }
+    statusEl.className="status"; statusEl.textContent=T().searching+" "+p.origin+" → "+p.destination+"…";
     byday.innerHTML=""; skeletons(); $("go").disabled=true;
     try{
       const r=await fetch(BACKEND_URL+"/search",{method:"POST",headers:{"Content-Type":"application/json"},
         body:JSON.stringify({origin:p.origin,destination:p.destination,date:p.date,returnDate:p.returnDate||null,passengers:Number(p.passengers)||1,cabin:"economy",flex:Number(p.flex)||0})});
-      const data=await r.json();
-      if(!r.ok||data.error) throw new Error(data.error||("Error "+r.status));
-      renderByDay(data.byDay||[]); render(data.offers||[]);
-      saveSearch(p);
-    }catch(e){ results.innerHTML=""; byday.innerHTML=""; statusEl.className="status error"; statusEl.textContent="No se pudo buscar: "+e.message; }
+      const data=await r.json(); if(!r.ok||data.error)throw new Error(data.error||("Error "+r.status));
+      renderByDay(data.byDay||[]); render(data.offers||[]); saveSearch(p);
+    }catch(e){ results.innerHTML="";byday.innerHTML=""; statusEl.className="status error"; statusEl.textContent=T().err+" "+e.message; }
     finally{ $("go").disabled=false; }
   }
 
-  function renderByDay(days){
-    lastByDay=days||[];
+  function renderByDay(days){ lastByDay=days||[];
     if(!days||days.length<=1){byday.innerHTML="";return;}
-    byday.innerHTML=days.map((d,i)=>{
-      const v=convert(d.cheapest,d.currency), cur=targetCur(), dec=cur==="CLP"?0:0;
-      return `<div class="day${i===0?' best':''}"><div class="d">${fmtDay(d.date)}${i===0?' · más barato':''}</div><div class="p">${CUR_SYMBOL[cur]}${v.toLocaleString("es-MX",{maximumFractionDigits:dec})} <small>${cur}</small></div></div>`;
-    }).join("");
+    byday.innerHTML=days.map((d,i)=>`<div class="day${i===0?' best':''}"><div class="d">${fmtDay(d.date)}${i===0?' '+T().best:''}</div><div class="p">${money(d.cheapest,d.currency)} <small>${cur}</small></div></div>`).join("");
   }
-
-  function render(offers){
-    lastOffers=offers||[];
-    if(!offers.length){ results.innerHTML=""; statusEl.textContent="Sin vuelos para esa ruta y fecha."; return; }
-    statusEl.textContent=offers.length+" vuelos (del más barato al más caro) · precios en "+targetCur()+":";
+  function render(offers){ lastOffers=offers||[];
+    if(!offers.length){results.innerHTML="";statusEl.textContent=T().none;return;}
+    statusEl.textContent=offers.length+" "+T().found+" "+cur+":";
     results.innerHTML=offers.map((o,i)=>`
       <div class="offer${i===0?' best':''}">
         <div>
-          <div class="air">${o.airline}${i===0?'<span class="tagbest">MÁS BARATO</span>':''}</div>
+          <div class="air">${o.airline}${i===0?'<span class="tagbest">'+T().cheapest+'</span>':''}</div>
           <div class="times"><b>${fmtTime(o.depart)}</b> → <b>${fmtTime(o.arrive)}</b> · ${stopsLabel(o.stops)}</div>
-          ${o.roundtrip&&o.retDepart?`<div class="ret">Regreso: ${fmtTime(o.retDepart)} → ${fmtTime(o.retArrive)} · ${stopsLabel(o.retStops)}</div>`:''}
+          ${o.roundtrip&&o.retDepart?`<div class="ret">${T().returnlbl} ${fmtTime(o.retDepart)} → ${fmtTime(o.retArrive)} · ${stopsLabel(o.retStops)}</div>`:''}
         </div>
-        <div class="price"><div class="amt">${fmtMoney(o.price,o.currency).replace(" "+targetCur(),"")}</div><div class="cur">${targetCur()}</div></div>
-        <a class="buy" target="_blank" rel="noopener" href="${buyLink(o)}">
-          <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>Comprar
-        </a>
+        <div class="price"><div class="amt">${money(o.price,o.currency)}</div><div class="cur">${cur}</div></div>
+        <a class="buy" target="_blank" rel="noopener" href="${buyLink(o)}"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>${T().buy}</a>
       </div>`).join("");
   }
 
-  // ---------- Formulario ----------
-  form.addEventListener("submit",(e)=>{
-    e.preventDefault();
-    search({
-      origin:$("origin").value, destination:$("destination").value,
-      originText:$("originText").value, destText:$("destText").value,
-      date:$("date").value, returnDate: tripType==="round" ? $("returnDate").value : null,
-      passengers:$("passengers").value, flex:$("flex").value, tripType
-    });
-  });
+  form.addEventListener("submit",(e)=>{ e.preventDefault();
+    search({origin:$("origin").value,destination:$("destination").value,originText:$("originText").value,destText:$("destText").value,
+      date:$("date").value,returnDate:tripType==="round"?$("returnDate").value:null,passengers:$("passengers").value,flex:$("flex").value,tripType}); });
 
-  $("quick").addEventListener("click",(e)=>{
-    const b=e.target.closest(".chip-q"); if(!b) return;
-    $("origin").value=b.dataset.o; $("originText").value=b.dataset.ot;
-    $("destination").value=b.dataset.d; $("destText").value=b.dataset.dt;
-    $("date").value=b.dataset.date;
-    search({origin:b.dataset.o,destination:b.dataset.d,originText:b.dataset.ot,destText:b.dataset.dt,date:b.dataset.date,returnDate:null,passengers:$("passengers").value,flex:$("flex").value,tripType:"oneway"});
-  });
+  $("quick").addEventListener("click",(e)=>{ const b=e.target.closest(".chip-q"); if(!b)return;
+    $("origin").value=b.dataset.o;$("originText").value=b.dataset.ot;$("destination").value=b.dataset.d;$("destText").value=b.dataset.dt;$("date").value=b.dataset.date;
+    search({origin:b.dataset.o,destination:b.dataset.d,originText:b.dataset.ot,destText:b.dataset.dt,date:b.dataset.date,returnDate:null,passengers:$("passengers").value,flex:$("flex").value,tripType:"oneway"}); });
 
-  // ---------- Historial guardado (localStorage, persistente) ----------
+  // ---------- Historial ----------
   const SKEY="vuelaamigo_saved";
   function getSaved(){ try{return JSON.parse(localStorage.getItem(SKEY))||[];}catch{return[];} }
-  function saveSearch(p){
-    if(!p.origin||!p.destination||!p.date) return;
-    let list=getSaved();
-    const key=p.origin+"-"+p.destination+"-"+p.date+"-"+(p.returnDate||"")+"-"+p.tripType;
-    list=list.filter(x=>x.key!==key);
-    list.unshift({key,origin:p.origin,destination:p.destination,originText:p.originText,destText:p.destText,date:p.date,returnDate:p.returnDate||null,passengers:p.passengers,flex:p.flex,tripType:p.tripType,ts:Date.now()});
-    list=list.slice(0,12);
-    localStorage.setItem(SKEY,JSON.stringify(list));
-    renderSaved();
-  }
-  function renderSaved(){
-    const list=getSaved(); const box=$("saved"), ul=$("saved-list");
-    if(!list.length){ box.style.display="none"; return; }
-    box.style.display="block";
-    ul.innerHTML=list.map((s,i)=>`<div class="saved-item"><span class="go" data-i="${i}"><b>${s.origin} → ${s.destination}</b> · ${fmtDay(s.date)}${s.tripType==="round"?" (redondo)":""}</span><button class="rm" data-rm="${i}" title="Quitar">×</button></div>`).join("");
-    ul.querySelectorAll(".go").forEach(el=>el.addEventListener("click",()=>{
-      const s=getSaved()[+el.dataset.i]; if(!s) return;
-      setTrip(s.tripType); $("origin").value=s.origin; $("originText").value=s.originText||s.origin;
-      $("destination").value=s.destination; $("destText").value=s.destText||s.destination;
-      $("date").value=s.date; if(s.returnDate)$("returnDate").value=s.returnDate;
-      $("passengers").value=s.passengers||"1"; $("flex").value=s.flex||"0";
-      search({origin:s.origin,destination:s.destination,originText:s.originText,destText:s.destText,date:s.date,returnDate:s.returnDate,passengers:s.passengers,flex:s.flex,tripType:s.tripType});
-    }));
-    ul.querySelectorAll(".rm").forEach(el=>el.addEventListener("click",()=>{
-      let list=getSaved(); list.splice(+el.dataset.rm,1); localStorage.setItem(SKEY,JSON.stringify(list)); renderSaved();
-    }));
-  }
-  renderSaved();
+  function saveSearch(p){ if(!p.origin||!p.destination||!p.date)return; let list=getSaved();
+    const key=p.origin+"-"+p.destination+"-"+p.date+"-"+(p.returnDate||"")+"-"+p.tripType; list=list.filter(x=>x.key!==key);
+    list.unshift({key,origin:p.origin,destination:p.destination,originText:p.originText,destText:p.destText,date:p.date,returnDate:p.returnDate||null,passengers:p.passengers,flex:p.flex,tripType:p.tripType});
+    list=list.slice(0,12); localStorage.setItem(SKEY,JSON.stringify(list)); renderSaved(); }
+  function renderSaved(){ const list=getSaved(),box=$("saved"),ul=$("saved-list");
+    if(!list.length){box.style.display="none";return;} box.style.display="block";
+    ul.innerHTML=list.map((s,i)=>`<div class="saved-item"><span class="go" data-i="${i}"><b>${s.origin} → ${s.destination}</b> · ${fmtDay(s.date)}${s.tripType==="round"?" ⇄":""}</span><button class="rm" data-rm="${i}">×</button></div>`).join("");
+    ul.querySelectorAll(".go").forEach(el=>el.addEventListener("click",()=>{ const s=getSaved()[+el.dataset.i]; if(!s)return;
+      setTrip(s.tripType);$("origin").value=s.origin;$("originText").value=s.originText||s.origin;$("destination").value=s.destination;$("destText").value=s.destText||s.destination;
+      $("date").value=s.date; if(s.returnDate)$("returnDate").value=s.returnDate; $("passengers").value=s.passengers||"1"; $("flex").value=s.flex||"0";
+      search({origin:s.origin,destination:s.destination,originText:s.originText,destText:s.destText,date:s.date,returnDate:s.returnDate,passengers:s.passengers,flex:s.flex,tripType:s.tripType}); }));
+    ul.querySelectorAll(".rm").forEach(el=>el.addEventListener("click",()=>{ let list=getSaved();list.splice(+el.dataset.rm,1);localStorage.setItem(SKEY,JSON.stringify(list));renderSaved(); })); }
 
-  // ---------- Fondo de nubes ----------
-  (function(){
-    const c=$("clouds-bg"); if(!c) return;
-    const cloudPath="M20 26a8 8 0 0 1 .6-15.9A11 11 0 0 1 42 12a7 7 0 0 1 2 13.8V26H20z";
-    for(let i=0;i<18;i++){
-      const size=60+Math.random()*180, top=Math.random()*100, left=Math.random()*100;
-      const delay=Math.random()*-20, dur=22+Math.random()*16, op=(0.35+Math.random()*0.30).toFixed(2);
-      const svg=document.createElementNS("http://www.w3.org/2000/svg","svg");
-      svg.setAttribute("viewBox","0 0 64 32"); svg.setAttribute("fill","currentColor");
+  // ---------- Nubes ----------
+  (function(){ const c=$("clouds-bg"); if(!c)return; const cp="M20 26a8 8 0 0 1 .6-15.9A11 11 0 0 1 42 12a7 7 0 0 1 2 13.8V26H20z";
+    for(let i=0;i<18;i++){ const size=60+Math.random()*180,top=Math.random()*100,left=Math.random()*100,delay=Math.random()*-20,dur=22+Math.random()*16,op=(0.35+Math.random()*0.30).toFixed(2);
+      const svg=document.createElementNS("http://www.w3.org/2000/svg","svg"); svg.setAttribute("viewBox","0 0 64 32"); svg.setAttribute("fill","currentColor");
       svg.style.cssText="width:"+size+"px;height:auto;top:"+top+"%;left:"+left+"%;opacity:"+op+";animation:driftAll "+dur.toFixed(0)+"s ease-in-out infinite;animation-delay:"+delay.toFixed(1)+"s;";
-      svg.innerHTML='<path d="'+cloudPath+'"></path>';
-      c.appendChild(svg);
-    }
-  })();
+      svg.innerHTML='<path d="'+cp+'"></path>'; c.appendChild(svg); } })();
+
+  // init
+  applyLang();
 </script>
 </body>
 </html>
