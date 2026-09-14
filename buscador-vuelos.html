@@ -48,7 +48,7 @@
   .quick{z-index:1}
   form.search{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px;
     box-shadow:0 1px 3px rgba(15,42,94,.06);display:grid;gap:12px;
-    grid-template-columns:1.3fr 1.3fr 1fr 1fr .8fr .9fr auto}
+    grid-template-columns:repeat(7,1fr) auto}
   @media(max-width:900px){form.search{grid-template-columns:1fr 1fr}}
   .field{display:flex;flex-direction:column;gap:4px;position:relative}
   .field label{font-size:.72rem;font-weight:700;color:var(--blue-500);text-transform:uppercase;letter-spacing:.04em}
@@ -186,6 +186,16 @@
         <option value="3" selected>± 3 días</option>
       </select>
     </div>
+    <div class="field">
+      <label for="currency">Moneda</label>
+      <select id="currency">
+        <option value="MXN" selected>MXN $ (México)</option>
+        <option value="USD">USD $ (Dólar)</option>
+        <option value="EUR">EUR € (Euro)</option>
+        <option value="BRL">BRL R$ (Brasil)</option>
+        <option value="CLP">CLP $ (Chile)</option>
+      </select>
+    </div>
     <button class="btn-go" id="go" type="submit">
       <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
       Buscar
@@ -212,7 +222,7 @@
 </main>
 
 <div class="foot">
-  <div class="mini">VuelaAmigo &middot; resultados vía Duffel. En modo test las aerolíneas y precios son de un entorno de pruebas. El botón Comprar te lleva a completar la reserva; VuelaAmigo aún no procesa pagos.</div>
+  <div class="mini">VuelaAmigo &middot; resultados vía Duffel. En modo test las aerolíneas y precios son de un entorno de pruebas. Los precios en otras monedas son una conversión de referencia (tasas del día); el cobro final lo hace la aerolínea en su moneda. El botón Comprar te lleva a completar la reserva; VuelaAmigo aún no procesa pagos.</div>
 </div>
 
 <script>
@@ -225,6 +235,33 @@
   const $ = (id) => document.getElementById(id);
   const form=$("form"), statusEl=$("status"), results=$("results"), byday=$("byday");
   let tripType="oneway";
+
+  // ---------- Divisas ----------
+  const CUR_SYMBOL={MXN:"$",USD:"$",EUR:"€",BRL:"R$",CLP:"$"};
+  let rates={USD:1}, lastOffers=[], lastByDay=[];
+  function targetCur(){ return $("currency").value || "MXN"; }
+  async function loadRates(){
+    try{
+      const r=await fetch("https://open.er-api.com/v6/latest/USD");
+      const d=await r.json();
+      if(d && d.rates) rates=d.rates;
+    }catch{ /* si falla, se queda en USD */ }
+  }
+  loadRates();
+  // convierte un monto dado en su moneda origen (from) a la moneda elegida
+  function convert(amount, from){
+    const cur=targetCur();
+    const rFrom=rates[from]||1, rTo=rates[cur]||1;
+    // amount está en 'from'; pasar a USD y luego a cur
+    const usd=amount/(rFrom||1);
+    return usd*(rTo||1);
+  }
+  function fmtMoney(amount, from, decimals){
+    const v=convert(amount, from), cur=targetCur();
+    const dec = decimals==null ? (cur==="CLP"?0:2) : decimals;
+    return CUR_SYMBOL[cur]+v.toLocaleString("es-MX",{minimumFractionDigits:dec,maximumFractionDigits:dec})+" "+cur;
+  }
+  $("currency").addEventListener("change",()=>{ if(lastOffers.length){ renderByDay(lastByDay); render(lastOffers); } });
 
   // ---------- Tipo de viaje ----------
   $("tt-one").addEventListener("click",()=>setTrip("oneway"));
@@ -312,13 +349,18 @@
   }
 
   function renderByDay(days){
-    if(days.length<=1){byday.innerHTML="";return;}
-    byday.innerHTML=days.map((d,i)=>`<div class="day${i===0?' best':''}"><div class="d">${fmtDay(d.date)}${i===0?' · más barato':''}</div><div class="p">$${d.cheapest.toLocaleString("es-MX",{maximumFractionDigits:0})} <small>${d.currency}</small></div></div>`).join("");
+    lastByDay=days||[];
+    if(!days||days.length<=1){byday.innerHTML="";return;}
+    byday.innerHTML=days.map((d,i)=>{
+      const v=convert(d.cheapest,d.currency), cur=targetCur(), dec=cur==="CLP"?0:0;
+      return `<div class="day${i===0?' best':''}"><div class="d">${fmtDay(d.date)}${i===0?' · más barato':''}</div><div class="p">${CUR_SYMBOL[cur]}${v.toLocaleString("es-MX",{maximumFractionDigits:dec})} <small>${cur}</small></div></div>`;
+    }).join("");
   }
 
   function render(offers){
+    lastOffers=offers||[];
     if(!offers.length){ results.innerHTML=""; statusEl.textContent="Sin vuelos para esa ruta y fecha."; return; }
-    statusEl.textContent=offers.length+" vuelos (del más barato al más caro):";
+    statusEl.textContent=offers.length+" vuelos (del más barato al más caro) · precios en "+targetCur()+":";
     results.innerHTML=offers.map((o,i)=>`
       <div class="offer${i===0?' best':''}">
         <div>
@@ -326,7 +368,7 @@
           <div class="times"><b>${fmtTime(o.depart)}</b> → <b>${fmtTime(o.arrive)}</b> · ${stopsLabel(o.stops)}</div>
           ${o.roundtrip&&o.retDepart?`<div class="ret">Regreso: ${fmtTime(o.retDepart)} → ${fmtTime(o.retArrive)} · ${stopsLabel(o.retStops)}</div>`:''}
         </div>
-        <div class="price"><div class="amt">$${o.price.toLocaleString("es-MX",{maximumFractionDigits:2})}</div><div class="cur">${o.currency}</div></div>
+        <div class="price"><div class="amt">${fmtMoney(o.price,o.currency).replace(" "+targetCur(),"")}</div><div class="cur">${targetCur()}</div></div>
         <a class="buy" target="_blank" rel="noopener" href="${buyLink(o)}">
           <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>Comprar
         </a>
