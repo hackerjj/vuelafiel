@@ -29,6 +29,19 @@ Tres MCP forman ese motor:
 - `contexto-vuelos.md` — contexto del itinerario Sep/Oct 2026
 - `README.md` — este archivo
 
+## Arquitectura (alineada a MealLi)
+
+Reusa los mismos servicios que ya usa Sushi Queen / MealLi, sin agregar proveedores nuevos:
+
+| Capa | Servicio | Notas |
+|------|----------|-------|
+| Frontend (esta página) | GitHub Pages (o Surge) | HTML/JS estático, gama azul |
+| Backend (proxy Duffel) | Render (Docker, PHP) | Mismo patrón contenedor que MealLi |
+| DNS / CDN | Cloudflare | Ya en uso |
+| API de vuelos | Duffel | Token como secreto en Render |
+
+Costo: ~$0/mes en planes free (Render free tiene "cold start"). Solo Duffel en modo live tendría costo por búsqueda.
+
 ## Roadmap
 
 - [ ] Formulario para agregar tramos propios (no solo el itinerario fijo)

@@ -1,26 +1,20 @@
-# VuelaAmigo — Backend (Cloudflare Worker)
+# VuelaAmigo — Backend (Render + Docker)
 
-Proxy seguro a la API de Duffel. Guarda el token de Duffel como secreto (nunca en el código ni en el front).
+Proxy seguro a la API de Duffel. Mismo patrón que MealLi: contenedor Docker en Render, token como secreto (nunca en el código ni en el front).
 
-## Desplegar (una vez)
+## Desplegar en Render
 
-Requiere Node instalado. Desde esta carpeta `backend/`:
+**Opción A — Blueprint (recomendada):**
+1. Sube este repo a GitHub (ya está en `hackerjj/vuelafiel`).
+2. En Render: **New > Blueprint**, apunta al repo, subcarpeta `vuelos/backend/` (usa el `render.yaml`).
+3. Cuando pida `DUFFEL_TOKEN`, pega el token `duffel_test_...` (queda como secreto, no en el repo).
+4. Deploy. Render te da una URL tipo `https://vuelaamigo-backend.onrender.com`.
 
-```bash
-# 1. Iniciar sesión en Cloudflare (abre el navegador)
-npx wrangler login
-
-# 2. Guardar el token de Duffel como secreto (pega el duffel_test_... cuando lo pida)
-npx wrangler secret put DUFFEL_TOKEN
-
-# 3. Desplegar
-npx wrangler deploy
-```
-
-Al terminar, Wrangler imprime la URL del Worker, algo como:
-`https://vuelaamigo.<tu-subdominio>.workers.dev`
-
-Copia esa URL y pégala en `index.html` (constante `BACKEND_URL`).
+**Opción B — Manual:**
+1. Render: **New > Web Service**, conecta el repo, root directory `vuelos/backend`.
+2. Runtime: Docker. Plan: Free.
+3. En **Environment**, agrega variable `DUFFEL_TOKEN` = tu token.
+4. Deploy.
 
 ## Endpoint
 
@@ -32,7 +26,14 @@ Respuesta:
 ```json
 { "offers": [ { "airline": "...", "price": 45.76, "currency": "USD", "depart": "...", "arrive": "...", "stops": 0 } ] }
 ```
+Health check: `GET /health`
 
-## Nota
+## Conectar el frontend
 
-En Test mode de Duffel las aerolíneas y precios son de un entorno de pruebas (verás "Duffel Airways", precios en USD). Para precios reales de mercado se necesita el modo live de Duffel (requiere su aprobación).
+Copia la URL de Render y pégala en `../index.html`, constante `BACKEND_URL`.
+
+## Notas
+
+- **Cold start** (plan free de Render): la primera búsqueda del día puede tardar unos segundos en despertar el servicio. Igual que MealLi.
+- **Modo test de Duffel:** aerolíneas y precios son de un entorno de pruebas. Para tarifas reales de mercado se necesita el modo live de Duffel (requiere su aprobación).
+- **Seguridad:** el token va como variable de entorno / secreto en Render, jamás en `render.yaml` ni en el repo.

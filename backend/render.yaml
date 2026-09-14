@@ -1,0 +1,14 @@
+# VuelaAmigo backend — blueprint de Render (mismo patrón que MealLi)
+# El token de Duffel se define como secreto en el dashboard de Render (sync:false),
+# NUNCA en este archivo (lección aprendida de MealLi: no dejar credenciales en render.yaml).
+services:
+  - type: web
+    name: vuelaamigo-backend
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: DUFFEL_TOKEN
+        sync: false   # se pega manualmente en el dashboard de Render
