@@ -36,8 +36,17 @@
   .searchbox{max-width:1000px;margin:18px auto 0;padding:0 20px}
   form.search{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px;
     box-shadow:0 1px 3px rgba(15,42,94,.06);display:grid;gap:12px;
-    grid-template-columns:1fr 1fr 1fr .7fr auto}
+    grid-template-columns:1fr 1fr 1fr .8fr .9fr auto}
   @media(max-width:760px){form.search{grid-template-columns:1fr 1fr}}
+
+  /* tira de días más baratos (multi-fecha) */
+  .byday{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 14px}
+  .day{border:1px solid var(--line);border-radius:10px;padding:8px 12px;background:#fff;cursor:pointer;transition:.15s;text-align:center;min-width:96px}
+  .day:hover{border-color:var(--blue-700)}
+  .day.best{border-color:var(--blue-700);background:var(--blue-050)}
+  .day .d{font-size:.74rem;color:var(--blue-500);font-weight:650}
+  .day .p{font-size:1rem;color:var(--blue-900);font-weight:800;margin-top:2px}
+  .day .p small{font-size:.62rem;color:var(--blue-500);font-weight:600}
   .field{display:flex;flex-direction:column;gap:4px}
   .field label{font-size:.72rem;font-weight:700;color:var(--blue-500);text-transform:uppercase;letter-spacing:.04em}
   .field input,.field select{border:1px solid var(--line);border-radius:9px;padding:10px 11px;font-size:.95rem;
@@ -126,6 +135,15 @@
         <option>1</option><option>2</option><option>3</option><option>4</option>
       </select>
     </div>
+    <div class="field">
+      <label for="flex">Flexible</label>
+      <select id="flex" name="flex">
+        <option value="0">Fecha exacta</option>
+        <option value="1">± 1 día</option>
+        <option value="2">± 2 días</option>
+        <option value="3" selected>± 3 días</option>
+      </select>
+    </div>
     <button class="btn-go" id="go" type="submit">
       <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
       Buscar
@@ -144,6 +162,7 @@
 
 <main>
   <div class="status" id="status"></div>
+  <div class="byday" id="byday"></div>
   <div class="results" id="results"></div>
 </main>
 
@@ -158,6 +177,7 @@
   const form = document.getElementById("form");
   const statusEl = document.getElementById("status");
   const results = document.getElementById("results");
+  const byday = document.getElementById("byday");
   const setup = document.getElementById("setup");
 
   if (!BACKEND_URL) {
@@ -176,31 +196,47 @@
     for(let i=0;i<4;i++){const s=document.createElement("div");s.className="skeleton";results.appendChild(s);}
   }
 
-  async function search({origin,destination,date,passengers}){
+  function fmtDay(iso){
+    const d=new Date(iso+"T00:00:00");
+    return d.toLocaleDateString("es-MX",{weekday:"short",day:"2-digit",month:"short"});
+  }
+
+  async function search({origin,destination,date,passengers,flex}){
     if(!BACKEND_URL){
       statusEl.className="status error";
       statusEl.textContent="El motor de búsqueda aún no está conectado (ver aviso arriba).";
       return;
     }
     statusEl.className="status";
-    statusEl.textContent="Buscando vuelos "+origin+" → "+destination+"…";
+    statusEl.textContent="Buscando vuelos "+origin+" → "+destination+(Number(flex)?" (± "+flex+" días)":"")+"…";
+    byday.innerHTML="";
     skeletons();
     document.getElementById("go").disabled=true;
     try{
       const r = await fetch(BACKEND_URL.replace(/\/$/,"")+"/search",{
         method:"POST",headers:{"Content-Type":"application/json"},
-        body:JSON.stringify({origin,destination,date,passengers:Number(passengers)||1,cabin:"economy"})
+        body:JSON.stringify({origin,destination,date,passengers:Number(passengers)||1,cabin:"economy",flex:Number(flex)||0})
       });
       const data = await r.json();
       if(!r.ok || data.error){ throw new Error(data.error||("Error "+r.status)); }
+      renderByDay(data.byDay||[], date);
       render(data.offers||[]);
     }catch(e){
-      results.innerHTML="";
+      results.innerHTML=""; byday.innerHTML="";
       statusEl.className="status error";
       statusEl.textContent="No se pudo buscar: "+e.message;
     }finally{
       document.getElementById("go").disabled=false;
     }
+  }
+
+  function renderByDay(days, selected){
+    if(days.length<=1){ byday.innerHTML=""; return; }
+    byday.innerHTML = days.map((d,i)=>`
+      <div class="day${i===0?' best':''}">
+        <div class="d">${fmtDay(d.date)}${i===0?' · más barato':''}</div>
+        <div class="p">$${d.cheapest.toLocaleString("es-MX",{maximumFractionDigits:0})} <small>${d.currency}</small></div>
+      </div>`).join("");
   }
 
   function render(offers){
@@ -227,14 +263,15 @@
       origin:form.origin.value.trim().toUpperCase(),
       destination:form.destination.value.trim().toUpperCase(),
       date:form.date.value,
-      passengers:form.passengers.value
+      passengers:form.passengers.value,
+      flex:form.flex.value
     });
   });
 
   document.getElementById("quick").addEventListener("click",function(e){
     const b=e.target.closest(".chip-q"); if(!b) return;
     form.origin.value=b.dataset.o; form.destination.value=b.dataset.d; form.date.value=b.dataset.date;
-    search({origin:b.dataset.o,destination:b.dataset.d,date:b.dataset.date,passengers:form.passengers.value});
+    search({origin:b.dataset.o,destination:b.dataset.d,date:b.dataset.date,passengers:form.passengers.value,flex:form.flex.value});
   });
 </script>
 </body>
