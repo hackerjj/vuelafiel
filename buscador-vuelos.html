@@ -3,84 +3,84 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>VuelaAmigo — Encuentra tu vuelo al mejor precio</title>
+<title>VuelaAmigo — Busca tu vuelo</title>
 <style>
   /* ===== VuelaAmigo — fondo blanco + una sola gama de AZULES ===== */
   :root{
-    --blue-900:#0f2a5e;  /* texto / tinta azul oscura */
-    --blue-700:#1d5fd6;  /* azul de marca */
-    --blue-500:#4d86ec;  /* azul medio (acentos suaves) */
-    --blue-100:#e9f0fd;  /* azul muy claro (fondos) */
-    --blue-050:#f5f8ff;  /* casi blanco azulado */
-    --line:#dbe6fb;      /* borde azul claro */
-    --bg:#ffffff;
+    --blue-900:#0f2a5e; --blue-700:#1d5fd6; --blue-500:#4d86ec;
+    --blue-100:#e9f0fd; --blue-050:#f5f8ff; --line:#dbe6fb; --bg:#ffffff;
   }
   *{box-sizing:border-box}
   body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
     background:var(--bg);color:var(--blue-900);line-height:1.5;-webkit-font-smoothing:antialiased}
   .ico{display:inline-block;width:1em;height:1em;vertical-align:-0.125em;margin-right:4px}
 
-  /* ---- Top bar ---- */
   .topbar{border-bottom:1px solid var(--line);position:sticky;top:0;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);z-index:20}
   .topbar-in{max-width:1000px;margin:0 auto;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px}
-  .brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:1.2rem;letter-spacing:-.02em;color:var(--blue-900)}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:1.2rem;letter-spacing:-.02em}
   .brand .name b{color:var(--blue-700)}
   .logo{width:40px;height:40px;flex:none;border-radius:12px;background:var(--blue-700);display:grid;place-items:center}
   .logo svg{width:24px;height:24px;color:#fff;margin:0}
   .tag{color:var(--blue-500);font-size:.8rem;display:none}
   @media(min-width:640px){.tag{display:block}}
 
-  /* ---- Hero ---- */
-  .hero{max-width:1000px;margin:0 auto;padding:36px 20px 8px;position:relative}
-  .hero h1{font-size:2rem;line-height:1.15;margin:0 0 8px;letter-spacing:-.02em}
+  .hero{max-width:1000px;margin:0 auto;padding:34px 20px 6px;position:relative}
+  .hero h1{font-size:1.9rem;line-height:1.15;margin:0 0 6px;letter-spacing:-.02em}
   .hero h1 .hl{color:var(--blue-700)}
   .hero p{color:var(--blue-500);margin:0;max-width:640px}
   .clouds{position:absolute;inset:0;overflow:hidden;pointer-events:none;opacity:.7}
   .clouds svg{position:absolute;color:var(--blue-100)}
-  .c1{top:10px;right:40px;width:120px}
-  .c2{top:70px;right:180px;width:80px}
-  .legend{display:flex;gap:16px;flex-wrap:wrap;color:var(--blue-500);font-size:.82rem;margin:18px 0 0;position:relative}
-  .legend b{color:var(--blue-900);font-weight:600}
+  .c1{top:8px;right:30px;width:110px}.c2{top:64px;right:170px;width:70px}
 
-  /* ---- Cards ---- */
-  main{max-width:1000px;margin:0 auto;padding:14px 20px 50px}
-  .grid{display:grid;gap:16px;grid-template-columns:1fr}
-  @media(min-width:760px){.grid{grid-template-columns:1fr 1fr}}
-  .card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px;position:relative;
-    box-shadow:0 1px 2px rgba(15,42,94,.05)}
-  .card.done{background:var(--blue-050)}
-  .row-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
-  .route{font-size:1.15rem;font-weight:750;display:flex;align-items:center;gap:9px;color:var(--blue-900)}
-  .iata{border:1px solid var(--blue-700);color:var(--blue-700);border-radius:8px;padding:2px 8px;font-size:.9rem;font-weight:700}
-  .arrow{color:var(--blue-500);display:inline-flex}
-  .badge{font-size:.7rem;font-weight:700;padding:4px 10px;border-radius:20px;white-space:nowrap;border:1px solid}
-  .b-pend{background:#fff;color:var(--blue-700);border-color:var(--blue-700)}
-  .b-done{background:var(--blue-700);color:#fff;border-color:var(--blue-700)}
-  .title{font-weight:650;margin:12px 0 2px;color:var(--blue-900)}
-  .meta{color:var(--blue-500);font-size:.87rem;margin:3px 0}
-  .meta strong{color:var(--blue-900);font-weight:650}
-  .chip{display:inline-block;background:var(--blue-100);border:1px solid var(--line);border-radius:6px;padding:1px 7px;font-size:.78rem;color:var(--blue-700)}
-  .note{background:var(--blue-100);border-left:3px solid var(--blue-700);padding:8px 12px;border-radius:6px;font-size:.83rem;color:var(--blue-500);margin:12px 0 2px}
-  .note strong{color:var(--blue-900)}
-  .price{color:var(--blue-500);font-size:.8rem}
-  .price b{color:var(--blue-900)}
-  .btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
-  a.btn{display:inline-flex;align-items:center;gap:5px;text-decoration:none;font-size:.83rem;font-weight:650;
-    padding:9px 12px;border-radius:9px;border:1px solid var(--line);color:var(--blue-700);background:#fff;transition:.15s}
-  a.btn:hover{border-color:var(--blue-700);background:var(--blue-050)}
-  a.btn.primary{background:var(--blue-700);border-color:var(--blue-700);color:#fff}
-  a.btn.primary:hover{background:var(--blue-900)}
+  /* ---- Formulario de búsqueda ---- */
+  .searchbox{max-width:1000px;margin:18px auto 0;padding:0 20px}
+  form.search{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px;
+    box-shadow:0 1px 3px rgba(15,42,94,.06);display:grid;gap:12px;
+    grid-template-columns:1fr 1fr 1fr .7fr auto}
+  @media(max-width:760px){form.search{grid-template-columns:1fr 1fr}}
+  .field{display:flex;flex-direction:column;gap:4px}
+  .field label{font-size:.72rem;font-weight:700;color:var(--blue-500);text-transform:uppercase;letter-spacing:.04em}
+  .field input,.field select{border:1px solid var(--line);border-radius:9px;padding:10px 11px;font-size:.95rem;
+    color:var(--blue-900);background:#fff;outline:none;font-family:inherit}
+  .field input:focus,.field select:focus{border-color:var(--blue-700);box-shadow:0 0 0 3px var(--blue-100)}
+  .field input::placeholder{color:#9db4e0;text-transform:uppercase}
+  .btn-go{align-self:end;background:var(--blue-700);color:#fff;border:none;border-radius:9px;padding:11px 18px;
+    font-size:.95rem;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:.15s}
+  .btn-go:hover{background:var(--blue-900)}
+  .btn-go:disabled{opacity:.6;cursor:default}
+  @media(max-width:760px){.btn-go{grid-column:1 / -1;justify-content:center}}
 
-  /* ---- Section ---- */
-  .section{max-width:1000px;margin:0 auto;padding:8px 20px}
-  .section h3{font-size:1.15rem;margin:0 0 6px;display:flex;align-items:center;gap:8px;color:var(--blue-900)}
-  .section p{color:var(--blue-500);margin:0 0 14px;max-width:660px}
+  .quick{max-width:1000px;margin:12px auto 0;padding:0 20px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .quick span{font-size:.78rem;color:var(--blue-500);font-weight:600}
+  .chip-q{border:1px solid var(--line);background:var(--blue-050);color:var(--blue-700);border-radius:20px;
+    padding:5px 12px;font-size:.8rem;font-weight:650;cursor:pointer;transition:.15s}
+  .chip-q:hover{border-color:var(--blue-700);background:var(--blue-100)}
 
-  /* ---- Footer ---- */
-  .foot{max-width:1000px;margin:0 auto;padding:10px 20px 50px;color:var(--blue-500);font-size:.82rem}
-  .foot h3{color:var(--blue-900);font-size:.95rem;margin:0 0 6px;display:flex;align-items:center;gap:6px}
-  .foot ul{margin:6px 0;padding-left:18px}
-  .foot .mini{margin-top:18px;font-size:.75rem;color:var(--blue-500);border-top:1px solid var(--line);padding-top:14px}
+  /* ---- Resultados ---- */
+  main{max-width:1000px;margin:0 auto;padding:20px}
+  .status{color:var(--blue-500);font-size:.9rem;margin:4px 2px 12px;min-height:20px}
+  .status.error{color:#b42318}
+  .results{display:grid;gap:10px}
+  .offer{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 16px;
+    display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;box-shadow:0 1px 2px rgba(15,42,94,.04)}
+  .offer.best{border-color:var(--blue-700);box-shadow:0 0 0 2px var(--blue-100)}
+  .offer .air{font-weight:700;color:var(--blue-900);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .tagbest{font-size:.68rem;font-weight:800;background:var(--blue-700);color:#fff;border-radius:20px;padding:2px 9px}
+  .offer .times{color:var(--blue-500);font-size:.86rem;margin-top:2px}
+  .offer .times b{color:var(--blue-900);font-weight:650}
+  .offer .stops{font-size:.76rem;color:var(--blue-500)}
+  .offer .price{text-align:right}
+  .offer .price .amt{font-size:1.25rem;font-weight:800;color:var(--blue-900)}
+  .offer .price .cur{font-size:.72rem;color:var(--blue-500);font-weight:600}
+  .skeleton{height:74px;border-radius:14px;background:linear-gradient(90deg,var(--blue-050),var(--blue-100),var(--blue-050));
+    background-size:200% 100%;animation:sh 1.2s infinite}
+  @keyframes sh{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+  .foot{max-width:1000px;margin:0 auto;padding:6px 20px 50px;color:var(--blue-500);font-size:.8rem}
+  .foot .mini{border-top:1px solid var(--line);padding-top:14px}
+  .setup{background:var(--blue-050);border:1px dashed var(--blue-500);border-radius:12px;padding:12px 14px;
+    margin:0 20px 14px;max-width:960px;color:var(--blue-900);font-size:.85rem}
+  .setup code{background:#fff;border:1px solid var(--line);border-radius:5px;padding:1px 5px;font-size:.82em}
 </style>
 </head>
 <body>
@@ -89,12 +89,11 @@
   <div class="topbar-in">
     <div class="brand">
       <span class="logo">
-        <!-- Logotipo: avión de papel -->
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.7 2.3a1 1 0 0 0-1.05-.23L2.75 8.9a1 1 0 0 0 .06 1.88l6.3 2.1 2.1 6.3a1 1 0 0 0 1.88.06l6.83-17.9a1 1 0 0 0-.22-1.04zM10.5 12.1 5.9 10.6 17 6.4l-6.5 5.7zm2.9 5.5-1.5-4.5 5.7-6.5-4.2 11z"/></svg>
       </span>
       <span class="name"><b>VuelaAmigo</b></span>
     </div>
-    <span class="tag">Encuentra tu vuelo al mejor precio</span>
+    <span class="tag">Busca tu vuelo al mejor precio</span>
   </div>
 </div>
 
@@ -103,126 +102,140 @@
     <svg class="c1" viewBox="0 0 64 32" fill="currentColor"><path d="M20 26a8 8 0 0 1 .6-15.9A11 11 0 0 1 42 12a7 7 0 0 1 2 13.8V26H20z"/></svg>
     <svg class="c2" viewBox="0 0 64 32" fill="currentColor"><path d="M20 26a8 8 0 0 1 .6-15.9A11 11 0 0 1 42 12a7 7 0 0 1 2 13.8V26H20z"/></svg>
   </div>
-  <h1>Tu itinerario, <span class="hl">al mejor precio</span></h1>
-  <p>VuelaAmigo reúne tus tramos y te lleva directo a comparar precios en vivo. Eliges el tramo, abres la búsqueda con fecha y ruta ya cargadas, y compras donde salga más barato.</p>
-  <div class="legend">
-    <span>
-      <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="var(--blue-700)" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/></svg>
-      <b>Ya apartado</b></span>
-    <span>
-      <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="var(--blue-500)" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v4M12 16h.01"/></svg>
-      <b>Pendiente por comprar</b></span>
-  </div>
+  <h1>Busca tu vuelo, <span class="hl">al mejor precio</span></h1>
+  <p>Escribe origen, destino y fecha. VuelaAmigo busca los vuelos reales y te muestra las mejores tarifas ordenadas de menor a mayor.</p>
 </section>
+
+<div class="searchbox">
+  <form class="search" id="form">
+    <div class="field">
+      <label for="origin">Origen</label>
+      <input id="origin" name="origin" maxlength="3" placeholder="GDL" required autocomplete="off">
+    </div>
+    <div class="field">
+      <label for="destination">Destino</label>
+      <input id="destination" name="destination" maxlength="3" placeholder="MEX" required autocomplete="off">
+    </div>
+    <div class="field">
+      <label for="date">Fecha</label>
+      <input id="date" name="date" type="date" required>
+    </div>
+    <div class="field">
+      <label for="passengers">Pasajeros</label>
+      <select id="passengers" name="passengers">
+        <option>1</option><option>2</option><option>3</option><option>4</option>
+      </select>
+    </div>
+    <button class="btn-go" id="go" type="submit">
+      <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      Buscar
+    </button>
+  </form>
+</div>
+
+<div class="quick" id="quick">
+  <span>Mis tramos:</span>
+  <button class="chip-q" data-o="MEX" data-d="GDL" data-date="2026-09-20">MEX → GDL · 20 sep</button>
+  <button class="chip-q" data-o="GDL" data-d="TRC" data-date="2026-10-02">GDL → TRC · 2 oct</button>
+  <button class="chip-q" data-o="TRC" data-d="GDL" data-date="2026-10-04">TRC → GDL · 4 oct</button>
+</div>
+
+<div class="setup" id="setup" style="display:none"></div>
 
 <main>
-  <div class="grid">
-
-    <!-- Vuelo 1 -->
-    <div class="card done">
-      <div class="row-top">
-        <div class="route"><span class="iata">GDL</span><span class="arrow"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span><span class="iata">MEX</span></div>
-        <span class="badge b-done">Ya apartado</span>
-      </div>
-      <div class="title">Vuelo 1 — Ida a CDMX (Evento Amazon)</div>
-      <div class="meta">Fecha <strong>16 o 17 sep 2026</strong> &middot; <span class="chip">Directo</span> <span class="chip">VivaAerobus</span></div>
-      <div class="meta price">Precio apartado ~<b>$1,100 MXN</b></div>
-      <div class="note"><strong>Recordatorio:</strong> dejar a la perrita en pensión médica en GDL del 17 al 20 (post-operatorio).</div>
-    </div>
-
-    <!-- Vuelo 2 -->
-    <div class="card">
-      <div class="row-top">
-        <div class="route"><span class="iata">MEX</span><span class="arrow"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span><span class="iata">GDL</span></div>
-        <span class="badge b-pend">Pendiente</span>
-      </div>
-      <div class="title">Vuelo 2 — Regreso temporal a GDL</div>
-      <div class="meta">Fecha <strong>20 sep 2026</strong> &middot; <span class="chip">Directo</span></div>
-      <div class="meta price">Referencia Aeroméxico ~<b>$1,919 MXN</b></div>
-      <div class="note">Regresar a presionar la renta del departamento y atender pendientes en casa.</div>
-      <div class="btns" data-o="MEX" data-d="GDL" data-out="2026-09-20"></div>
-    </div>
-
-    <!-- Vuelo 3 -->
-    <div class="card">
-      <div class="row-top">
-        <div class="route"><span class="iata">GDL</span><span class="arrow"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span><span class="iata">TRC</span></div>
-        <span class="badge b-pend">Pendiente</span>
-      </div>
-      <div class="title">Vuelo 3 — Salida a Torreón (Boda)</div>
-      <div class="meta">Fecha <strong>2 oct 2026</strong> &middot; <span class="chip">Escala en MEX</span></div>
-      <div class="meta price">Combinado ~<b>$2,200 – $2,872 MXN</b></div>
-      <div class="note"><strong>Clave:</strong> la escala en MEX debe empalmar con el vuelo de Andrea para viajar juntos el último tramo. Confirmar su horario antes de comprar.</div>
-      <div class="btns" data-o="GDL" data-d="TRC" data-out="2026-10-02"></div>
-    </div>
-
-    <!-- Vuelo 4 -->
-    <div class="card">
-      <div class="row-top">
-        <div class="route"><span class="iata">TRC</span><span class="arrow"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span><span class="iata">GDL</span></div>
-        <span class="badge b-pend">Pendiente</span>
-      </div>
-      <div class="title">Vuelo 4 — Regreso definitivo a GDL (post-boda)</div>
-      <div class="meta">Fecha <strong>4 oct 2026</strong> (domingo) &middot; <span class="chip">Escala rápida en MEX</span></div>
-      <div class="meta price">Referencia ~<b>$1,489 MXN</b></div>
-      <div class="note">Regresar directo a la rutina sin perder más días.</div>
-      <div class="btns" data-o="TRC" data-d="GDL" data-out="2026-10-04"></div>
-    </div>
-
-  </div>
+  <div class="status" id="status"></div>
+  <div class="results" id="results"></div>
 </main>
 
-<section class="section">
-  <h3>
-    <!-- maleta -->
-    <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="var(--blue-700)" stroke-width="2"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-    Hacia dónde va VuelaAmigo
-  </h3>
-  <p>La visión: dejar de buscar a mano y que VuelaAmigo encuentre el vuelo más barato por ti, comparando decenas de fechas y aerolíneas. El motor serán tres conectores de datos de vuelo (MCP) que el asistente usa por debajo.</p>
-  <div class="grid">
-    <div class="card"><div class="title">Duffel Flights MCP</div><div class="meta">Vuelos reales en vivo por lenguaje natural, rangos de fechas flexibles y memoria de búsquedas. <span class="chip">precio real</span> <span class="chip">multi-fecha</span></div></div>
-    <div class="card"><div class="title">ravinahp/flights-mcp</div><div class="meta">Buscar a través de múltiples días para el mejor precio sin revisar fecha por fecha. <span class="chip">mejor precio</span></div></div>
-    <div class="card"><div class="title">Flight Finder AI (Google Flights MCP)</div><div class="meta">Rutas más baratas y tendencias de precio desde Google Flights. <span class="chip">tendencias</span></div></div>
-    <div class="card"><div class="title">Cómo encaja</div><div class="meta">Estos MCP corren junto al asistente, no dentro de esta página. VuelaAmigo muestra el itinerario y, con el MCP conectado, el asistente devuelve el tramo más barato listo para comprar.</div></div>
-  </div>
-</section>
-
 <div class="foot">
-  <h3>
-    <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="var(--blue-700)" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
-    Notas de compra
-  </h3>
-  <ul>
-    <li>Comprar cada tramo por separado permite mezclar aerolíneas y bajar el precio.</li>
-    <li>Volaris: hay vouchers de Jair y Andrea (~$2,022 c/u, vencen ~dic 2026) aplicables en volaris.com.</li>
-    <li>Google Flights, Skyscanner y Kayak cargan ruta y fecha directo (los más confiables). Los sitios de aerolíneas pueden abrir en su home.</li>
-  </ul>
-  <div class="mini">VuelaAmigo &middot; prototipo. Los precios son referencias; el botón abre la búsqueda en vivo. VuelaAmigo no vende ni procesa pagos: te lleva a la plataforma donde compras.</div>
+  <div class="mini">VuelaAmigo &middot; los resultados vienen de la API de Duffel. En modo test las aerolíneas y precios son de un entorno de pruebas. VuelaAmigo no procesa pagos.</div>
 </div>
 
 <script>
-function parts(iso){const [y,m,d]=iso.split("-");return {y,m,d};}
-document.querySelectorAll(".btns").forEach(function(box){
-  const o=box.dataset.o, d=box.dataset.d, out=box.dataset.out;
-  const p=parts(out);
-  const gf   ="https://www.google.com/travel/flights?q=Flights%20"+o+"%20to%20"+d+"%20on%20"+out;
-  const sky  ="https://www.skyscanner.com.mx/transport/flights/"+o.toLowerCase()+"/"+d.toLowerCase()+"/"+p.y.slice(2)+p.m+p.d+"/?adultsv2=1&cabinclass=economy&rtn=0";
-  const kayak="https://www.kayak.com.mx/flights/"+o+"-"+d+"/"+out+"?sort=price_a";
-  const viva ="https://www.vivaaerobus.com/es-mx/";
-  const aero ="https://www.aeromexico.com/es-mx";
-  const vol  ="https://www.volaris.com/";
-  const search='<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>';
-  const mk=function(href,label,primary){
-    return '<a class="btn'+(primary?' primary':'')+'" target="_blank" rel="noopener" href="'+href+'">'+search+label+'</a>';
-  };
-  box.innerHTML =
-    mk(gf,"Google Flights",true)+
-    mk(sky,"Skyscanner",false)+
-    mk(kayak,"Kayak",false)+
-    mk(viva,"VivaAerobus",false)+
-    mk(aero,"Aeroméxico",false)+
-    mk(vol,"Volaris",false);
-});
+  // === Configura aquí la URL del backend (Cloudflare Worker) tras desplegarlo ===
+  const BACKEND_URL = ""; // ej: "https://vuelaamigo.tu-subdominio.workers.dev"
+
+  const form = document.getElementById("form");
+  const statusEl = document.getElementById("status");
+  const results = document.getElementById("results");
+  const setup = document.getElementById("setup");
+
+  if (!BACKEND_URL) {
+    setup.style.display = "block";
+    setup.innerHTML = 'Falta conectar el motor de búsqueda. Despliega el backend (carpeta <code>backend/</code>) y pega su URL en <code>BACKEND_URL</code> dentro de este archivo. Mientras tanto la búsqueda no está activa.';
+  }
+
+  function fmtTime(iso){
+    const d = new Date(iso);
+    return d.toLocaleString("es-MX",{day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"});
+  }
+  function stopsLabel(n){ return n===0 ? "Directo" : (n+" escala"+(n>1?"s":"")); }
+
+  function skeletons(){
+    results.innerHTML = "";
+    for(let i=0;i<4;i++){const s=document.createElement("div");s.className="skeleton";results.appendChild(s);}
+  }
+
+  async function search({origin,destination,date,passengers}){
+    if(!BACKEND_URL){
+      statusEl.className="status error";
+      statusEl.textContent="El motor de búsqueda aún no está conectado (ver aviso arriba).";
+      return;
+    }
+    statusEl.className="status";
+    statusEl.textContent="Buscando vuelos "+origin+" → "+destination+"…";
+    skeletons();
+    document.getElementById("go").disabled=true;
+    try{
+      const r = await fetch(BACKEND_URL.replace(/\/$/,"")+"/search",{
+        method:"POST",headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({origin,destination,date,passengers:Number(passengers)||1,cabin:"economy"})
+      });
+      const data = await r.json();
+      if(!r.ok || data.error){ throw new Error(data.error||("Error "+r.status)); }
+      render(data.offers||[]);
+    }catch(e){
+      results.innerHTML="";
+      statusEl.className="status error";
+      statusEl.textContent="No se pudo buscar: "+e.message;
+    }finally{
+      document.getElementById("go").disabled=false;
+    }
+  }
+
+  function render(offers){
+    if(!offers.length){
+      results.innerHTML="";
+      statusEl.textContent="Sin vuelos para esa ruta y fecha.";
+      return;
+    }
+    statusEl.textContent=offers.length+" vuelos encontrados (del más barato al más caro):";
+    results.innerHTML = offers.map((o,i)=>`
+      <div class="offer${i===0?' best':''}">
+        <div>
+          <div class="air">${o.airline}${i===0?'<span class="tagbest">MÁS BARATO</span>':''}</div>
+          <div class="times"><b>${fmtTime(o.depart)}</b> → <b>${fmtTime(o.arrive)}</b></div>
+          <div class="stops">${stopsLabel(o.stops)}</div>
+        </div>
+        <div class="price"><div class="amt">$${o.price.toLocaleString("es-MX",{maximumFractionDigits:2})}</div><div class="cur">${o.currency}</div></div>
+      </div>`).join("");
+  }
+
+  form.addEventListener("submit",function(e){
+    e.preventDefault();
+    search({
+      origin:form.origin.value.trim().toUpperCase(),
+      destination:form.destination.value.trim().toUpperCase(),
+      date:form.date.value,
+      passengers:form.passengers.value
+    });
+  });
+
+  document.getElementById("quick").addEventListener("click",function(e){
+    const b=e.target.closest(".chip-q"); if(!b) return;
+    form.origin.value=b.dataset.o; form.destination.value=b.dataset.d; form.date.value=b.dataset.date;
+    search({origin:b.dataset.o,destination:b.dataset.d,date:b.dataset.date,passengers:form.passengers.value});
+  });
 </script>
 </body>
 </html>
