@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>VuelaAmigo — Busca tu vuelo</title>
 <style>
-  /* ===== VuelaAmigo — fondo blanco + una sola gama de AZULES ===== */
   :root{
     --blue-900:#0f2a5e; --blue-700:#1d5fd6; --blue-500:#4d86ec;
     --blue-100:#e9f0fd; --blue-050:#f5f8ff; --line:#dbe6fb; --bg:#ffffff;
@@ -15,7 +14,7 @@
     background:var(--bg);color:var(--blue-900);line-height:1.5;-webkit-font-smoothing:antialiased}
   .ico{display:inline-block;width:1em;height:1em;vertical-align:-0.125em;margin-right:4px}
 
-  .topbar{border-bottom:1px solid var(--line);position:sticky;top:0;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);z-index:20}
+  .topbar{border-bottom:1px solid var(--line);position:sticky;top:0;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);z-index:30}
   .topbar-in{max-width:1000px;margin:0 auto;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px}
   .brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:1.2rem;letter-spacing:-.02em}
   .brand .name b{color:var(--blue-700)}
@@ -28,45 +27,50 @@
   .hero h1{font-size:1.9rem;line-height:1.15;margin:0 0 6px;letter-spacing:-.02em}
   .hero h1 .hl{color:var(--blue-700)}
   .hero p{color:var(--blue-500);margin:0;max-width:640px}
-  /* ---- Fondo animado de nubes (CSS keyframes + JS vanilla, cero librerías) ---- */
+
   #clouds-bg{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:0}
   #clouds-bg svg{position:fixed;color:var(--blue-100);pointer-events:none}
   @keyframes driftAll{
-    0%  {transform:translateX(0)     translateY(0)}
-    25% {transform:translateX(40px)  translateY(-20px)}
-    50% {transform:translateX(-30px) translateY(30px)}
-    75% {transform:translateX(20px)  translateY(-40px)}
-    100%{transform:translateX(0)     translateY(0)}
+    0%{transform:translateX(0) translateY(0)}25%{transform:translateX(40px) translateY(-20px)}
+    50%{transform:translateX(-30px) translateY(30px)}75%{transform:translateX(20px) translateY(-40px)}
+    100%{transform:translateX(0) translateY(0)}
   }
-  /* el contenido va por encima del fondo */
   .topbar,.hero,.searchbox,.quick,.setup,main,.foot{position:relative;z-index:1}
 
-  /* ---- Formulario de búsqueda ---- */
-  .searchbox{max-width:1000px;margin:18px auto 0;padding:0 20px}
+  /* ---- Tipo de viaje ---- */
+  .triptype{max-width:1000px;margin:16px auto 0;padding:0 20px;display:flex;gap:8px}
+  .tt{border:1px solid var(--line);background:#fff;color:var(--blue-700);border-radius:9px;padding:7px 14px;
+    font-size:.85rem;font-weight:700;cursor:pointer;transition:.15s}
+  .tt.active{background:var(--blue-700);color:#fff;border-color:var(--blue-700)}
+
+  /* ---- Formulario ---- */
+  .searchbox{max-width:1000px;margin:10px auto 0;padding:0 20px}
   form.search{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px;
     box-shadow:0 1px 3px rgba(15,42,94,.06);display:grid;gap:12px;
-    grid-template-columns:1fr 1fr 1fr .8fr .9fr auto}
-  @media(max-width:760px){form.search{grid-template-columns:1fr 1fr}}
-
-  /* tira de días más baratos (multi-fecha) */
-  .byday{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 14px}
-  .day{border:1px solid var(--line);border-radius:10px;padding:8px 12px;background:#fff;cursor:pointer;transition:.15s;text-align:center;min-width:96px}
-  .day:hover{border-color:var(--blue-700)}
-  .day.best{border-color:var(--blue-700);background:var(--blue-050)}
-  .day .d{font-size:.74rem;color:var(--blue-500);font-weight:650}
-  .day .p{font-size:1rem;color:var(--blue-900);font-weight:800;margin-top:2px}
-  .day .p small{font-size:.62rem;color:var(--blue-500);font-weight:600}
-  .field{display:flex;flex-direction:column;gap:4px}
+    grid-template-columns:1.3fr 1.3fr 1fr 1fr .8fr .9fr auto}
+  @media(max-width:900px){form.search{grid-template-columns:1fr 1fr}}
+  .field{display:flex;flex-direction:column;gap:4px;position:relative}
   .field label{font-size:.72rem;font-weight:700;color:var(--blue-500);text-transform:uppercase;letter-spacing:.04em}
   .field input,.field select{border:1px solid var(--line);border-radius:9px;padding:10px 11px;font-size:.95rem;
-    color:var(--blue-900);background:#fff;outline:none;font-family:inherit}
+    color:var(--blue-900);background:#fff;outline:none;font-family:inherit;width:100%}
   .field input:focus,.field select:focus{border-color:var(--blue-700);box-shadow:0 0 0 3px var(--blue-100)}
-  .field input::placeholder{color:#9db4e0;text-transform:uppercase}
+  .field input::placeholder{color:#9db4e0}
+  .field.hidden{display:none}
   .btn-go{align-self:end;background:var(--blue-700);color:#fff;border:none;border-radius:9px;padding:11px 18px;
     font-size:.95rem;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:.15s}
   .btn-go:hover{background:var(--blue-900)}
   .btn-go:disabled{opacity:.6;cursor:default}
-  @media(max-width:760px){.btn-go{grid-column:1 / -1;justify-content:center}}
+  @media(max-width:900px){.btn-go{grid-column:1 / -1;justify-content:center}}
+
+  /* ---- Autocompletar ---- */
+  .ac{position:absolute;top:100%;left:0;right:0;z-index:40;background:#fff;border:1px solid var(--line);
+    border-radius:10px;margin-top:4px;box-shadow:0 8px 24px rgba(15,42,94,.12);overflow:hidden;display:none}
+  .ac.show{display:block}
+  .ac div{padding:9px 12px;cursor:pointer;font-size:.88rem;border-bottom:1px solid var(--blue-050)}
+  .ac div:last-child{border-bottom:none}
+  .ac div:hover,.ac div.hl{background:var(--blue-050)}
+  .ac .iata{font-weight:800;color:var(--blue-700);margin-right:6px}
+  .ac .sub{color:var(--blue-500);font-size:.78rem}
 
   .quick{max-width:1000px;margin:12px auto 0;padding:0 20px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
   .quick span{font-size:.78rem;color:var(--blue-500);font-weight:600}
@@ -74,31 +78,50 @@
     padding:5px 12px;font-size:.8rem;font-weight:650;cursor:pointer;transition:.15s}
   .chip-q:hover{border-color:var(--blue-700);background:var(--blue-100)}
 
-  /* ---- Resultados ---- */
   main{max-width:1000px;margin:0 auto;padding:20px}
   .status{color:var(--blue-500);font-size:.9rem;margin:4px 2px 12px;min-height:20px}
   .status.error{color:#b42318}
+  .byday{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 14px}
+  .day{border:1px solid var(--line);border-radius:10px;padding:8px 12px;background:#fff;text-align:center;min-width:96px}
+  .day.best{border-color:var(--blue-700);background:var(--blue-050)}
+  .day .d{font-size:.74rem;color:var(--blue-500);font-weight:650}
+  .day .p{font-size:1rem;color:var(--blue-900);font-weight:800;margin-top:2px}
+  .day .p small{font-size:.62rem;color:var(--blue-500);font-weight:600}
+
   .results{display:grid;gap:10px}
   .offer{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 16px;
-    display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;box-shadow:0 1px 2px rgba(15,42,94,.04)}
+    display:grid;grid-template-columns:1fr auto auto;gap:14px;align-items:center;box-shadow:0 1px 2px rgba(15,42,94,.04)}
+  @media(max-width:600px){.offer{grid-template-columns:1fr auto}}
   .offer.best{border-color:var(--blue-700);box-shadow:0 0 0 2px var(--blue-100)}
   .offer .air{font-weight:700;color:var(--blue-900);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
   .tagbest{font-size:.68rem;font-weight:800;background:var(--blue-700);color:#fff;border-radius:20px;padding:2px 9px}
   .offer .times{color:var(--blue-500);font-size:.86rem;margin-top:2px}
   .offer .times b{color:var(--blue-900);font-weight:650}
   .offer .stops{font-size:.76rem;color:var(--blue-500)}
+  .offer .ret{font-size:.76rem;color:var(--blue-500);margin-top:3px}
   .offer .price{text-align:right}
   .offer .price .amt{font-size:1.25rem;font-weight:800;color:var(--blue-900)}
   .offer .price .cur{font-size:.72rem;color:var(--blue-500);font-weight:600}
+  .buy{background:var(--blue-700);color:#fff;text-decoration:none;border-radius:9px;padding:9px 14px;
+    font-size:.82rem;font-weight:700;white-space:nowrap;display:inline-flex;align-items:center;gap:5px;transition:.15s}
+  .buy:hover{background:var(--blue-900)}
+  @media(max-width:600px){.buy{grid-column:1 / -1;justify-content:center}}
   .skeleton{height:74px;border-radius:14px;background:linear-gradient(90deg,var(--blue-050),var(--blue-100),var(--blue-050));
     background-size:200% 100%;animation:sh 1.2s infinite}
   @keyframes sh{0%{background-position:200% 0}100%{background-position:-200% 0}}
 
+  /* ---- Historial guardado ---- */
+  .saved{max-width:1000px;margin:6px auto 0;padding:0 20px}
+  .saved h3{font-size:.9rem;color:var(--blue-900);margin:0 0 8px;display:flex;align-items:center;gap:6px}
+  .saved-list{display:flex;gap:8px;flex-wrap:wrap}
+  .saved-item{border:1px solid var(--line);background:#fff;border-radius:10px;padding:6px 10px;font-size:.8rem;
+    color:var(--blue-700);display:flex;align-items:center;gap:8px}
+  .saved-item b{color:var(--blue-900)}
+  .saved-item .go{cursor:pointer;font-weight:700}
+  .saved-item .rm{cursor:pointer;color:var(--blue-500);border:none;background:none;font-size:1rem;line-height:1;padding:0}
+
   .foot{max-width:1000px;margin:0 auto;padding:6px 20px 50px;color:var(--blue-500);font-size:.8rem}
   .foot .mini{border-top:1px solid var(--line);padding-top:14px}
-  .setup{background:var(--blue-050);border:1px dashed var(--blue-500);border-radius:12px;padding:12px 14px;
-    margin:0 20px 14px;max-width:960px;color:var(--blue-900);font-size:.85rem}
-  .setup code{background:#fff;border:1px solid var(--line);border-radius:5px;padding:1px 5px;font-size:.82em}
 </style>
 </head>
 <body>
@@ -119,32 +142,43 @@
 
 <section class="hero">
   <h1>Busca tu vuelo, <span class="hl">al mejor precio</span></h1>
-  <p>Escribe origen, destino y fecha. VuelaAmigo busca los vuelos reales y te muestra las mejores tarifas ordenadas de menor a mayor.</p>
+  <p>Escribe la ciudad de origen y destino, elige fecha, y VuelaAmigo busca los vuelos reales ordenados de menor a mayor precio.</p>
 </section>
 
+<div class="triptype">
+  <button class="tt active" id="tt-one" type="button">Solo ida</button>
+  <button class="tt" id="tt-round" type="button">Redondo</button>
+</div>
+
 <div class="searchbox">
-  <form class="search" id="form">
+  <form class="search" id="form" autocomplete="off">
     <div class="field">
-      <label for="origin">Origen</label>
-      <input id="origin" name="origin" maxlength="3" placeholder="GDL" required autocomplete="off">
+      <label for="originText">Origen</label>
+      <input id="originText" placeholder="Ciudad o aeropuerto" required>
+      <input type="hidden" id="origin">
+      <div class="ac" id="ac-origin"></div>
     </div>
     <div class="field">
-      <label for="destination">Destino</label>
-      <input id="destination" name="destination" maxlength="3" placeholder="MEX" required autocomplete="off">
+      <label for="destText">Destino</label>
+      <input id="destText" placeholder="Ciudad o aeropuerto" required>
+      <input type="hidden" id="destination">
+      <div class="ac" id="ac-dest"></div>
     </div>
     <div class="field">
-      <label for="date">Fecha</label>
-      <input id="date" name="date" type="date" required>
+      <label for="date">Salida</label>
+      <input id="date" type="date" required>
+    </div>
+    <div class="field hidden" id="fld-return">
+      <label for="returnDate">Regreso</label>
+      <input id="returnDate" type="date">
     </div>
     <div class="field">
       <label for="passengers">Pasajeros</label>
-      <select id="passengers" name="passengers">
-        <option>1</option><option>2</option><option>3</option><option>4</option>
-      </select>
+      <select id="passengers"><option>1</option><option>2</option><option>3</option><option>4</option></select>
     </div>
     <div class="field">
       <label for="flex">Flexible</label>
-      <select id="flex" name="flex">
+      <select id="flex">
         <option value="0">Fecha exacta</option>
         <option value="1">± 1 día</option>
         <option value="2">± 2 días</option>
@@ -160,12 +194,15 @@
 
 <div class="quick" id="quick">
   <span>Mis tramos:</span>
-  <button class="chip-q" data-o="MEX" data-d="GDL" data-date="2026-09-20">MEX → GDL · 20 sep</button>
-  <button class="chip-q" data-o="GDL" data-d="TRC" data-date="2026-10-02">GDL → TRC · 2 oct</button>
-  <button class="chip-q" data-o="TRC" data-d="GDL" data-date="2026-10-04">TRC → GDL · 4 oct</button>
+  <button class="chip-q" data-o="MEX" data-ot="Ciudad de México (MEX)" data-d="GDL" data-dt="Guadalajara (GDL)" data-date="2026-09-20">MEX → GDL · 20 sep</button>
+  <button class="chip-q" data-o="GDL" data-ot="Guadalajara (GDL)" data-d="TRC" data-dt="Torreón (TRC)" data-date="2026-10-02">GDL → TRC · 2 oct</button>
+  <button class="chip-q" data-o="TRC" data-ot="Torreón (TRC)" data-d="GDL" data-dt="Guadalajara (GDL)" data-date="2026-10-04">TRC → GDL · 4 oct</button>
 </div>
 
-<div class="setup" id="setup" style="display:none"></div>
+<div class="saved" id="saved" style="display:none">
+  <h3><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="var(--blue-700)" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>Búsquedas guardadas</h3>
+  <div class="saved-list" id="saved-list"></div>
+</div>
 
 <main>
   <div class="status" id="status"></div>
@@ -174,133 +211,189 @@
 </main>
 
 <div class="foot">
-  <div class="mini">VuelaAmigo &middot; los resultados vienen de la API de Duffel. En modo test las aerolíneas y precios son de un entorno de pruebas. VuelaAmigo no procesa pagos.</div>
+  <div class="mini">VuelaAmigo &middot; resultados vía Duffel. En modo test las aerolíneas y precios son de un entorno de pruebas. El botón Comprar te lleva a completar la reserva; VuelaAmigo aún no procesa pagos.</div>
 </div>
 
 <script>
-  // === Configura aquí la URL del backend (Cloudflare Worker) tras desplegarlo ===
   const BACKEND_URL = "https://vuelaamigo.mexintouch.workers.dev";
 
-  const form = document.getElementById("form");
-  const statusEl = document.getElementById("status");
-  const results = document.getElementById("results");
-  const byday = document.getElementById("byday");
-  const setup = document.getElementById("setup");
+  // === Afiliado (Travelpayouts/Aviasales). Pega tu marker aquí cuando lo tengas. ===
+  // Mientras esté vacío, el botón "Comprar" manda a Google Flights de esa ruta/fecha.
+  const TP_MARKER = "";
 
-  if (!BACKEND_URL) {
-    setup.style.display = "block";
-    setup.innerHTML = 'Falta conectar el motor de búsqueda. Despliega el backend (carpeta <code>backend/</code>) y pega su URL en <code>BACKEND_URL</code> dentro de este archivo. Mientras tanto la búsqueda no está activa.';
+  const $ = (id) => document.getElementById(id);
+  const form=$("form"), statusEl=$("status"), results=$("results"), byday=$("byday");
+  let tripType="oneway";
+
+  // ---------- Tipo de viaje ----------
+  $("tt-one").addEventListener("click",()=>setTrip("oneway"));
+  $("tt-round").addEventListener("click",()=>setTrip("round"));
+  function setTrip(t){
+    tripType=t;
+    $("tt-one").classList.toggle("active",t==="oneway");
+    $("tt-round").classList.toggle("active",t==="round");
+    $("fld-return").classList.toggle("hidden",t!=="round");
+    if(t==="round") $("returnDate").required=true; else $("returnDate").required=false;
   }
 
-  function fmtTime(iso){
-    const d = new Date(iso);
-    return d.toLocaleString("es-MX",{day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"});
-  }
-  function stopsLabel(n){ return n===0 ? "Directo" : (n+" escala"+(n>1?"s":"")); }
-
-  function skeletons(){
-    results.innerHTML = "";
-    for(let i=0;i<4;i++){const s=document.createElement("div");s.className="skeleton";results.appendChild(s);}
-  }
-
-  function fmtDay(iso){
-    const d=new Date(iso+"T00:00:00");
-    return d.toLocaleDateString("es-MX",{weekday:"short",day:"2-digit",month:"short"});
-  }
-
-  async function search({origin,destination,date,passengers,flex}){
-    if(!BACKEND_URL){
-      statusEl.className="status error";
-      statusEl.textContent="El motor de búsqueda aún no está conectado (ver aviso arriba).";
-      return;
+  // ---------- Autocompletar ----------
+  function setupAC(textId, hiddenId, boxId){
+    const t=$(textId), h=$(hiddenId), box=$(boxId); let timer=null, items=[], hi=-1;
+    t.addEventListener("input",()=>{
+      h.value=""; // hasta elegir de la lista no hay IATA
+      const q=t.value.trim();
+      clearTimeout(timer);
+      if(q.length<2){ box.classList.remove("show"); return; }
+      timer=setTimeout(async()=>{
+        try{
+          const r=await fetch(BACKEND_URL+"/places?q="+encodeURIComponent(q));
+          items=await r.json(); hi=-1; renderAC();
+        }catch{ box.classList.remove("show"); }
+      },220);
+    });
+    t.addEventListener("keydown",(e)=>{
+      if(!box.classList.contains("show")) return;
+      if(e.key==="ArrowDown"){hi=Math.min(hi+1,items.length-1);paint();e.preventDefault();}
+      else if(e.key==="ArrowUp"){hi=Math.max(hi-1,0);paint();e.preventDefault();}
+      else if(e.key==="Enter"){ if(hi>=0){choose(items[hi]);e.preventDefault();} }
+      else if(e.key==="Escape"){box.classList.remove("show");}
+    });
+    function renderAC(){
+      if(!items.length){box.classList.remove("show");box.innerHTML="";return;}
+      box.innerHTML=items.map((p,i)=>`<div data-i="${i}"><span class="iata">${p.iata}</span>${p.city} <span class="sub">· ${p.name}${p.country?(" · "+p.country):""}</span></div>`).join("");
+      box.classList.add("show");
+      box.querySelectorAll("div").forEach(el=>el.addEventListener("mousedown",(ev)=>{ev.preventDefault();choose(items[+el.dataset.i]);}));
     }
+    function paint(){ box.querySelectorAll("div").forEach((el,i)=>el.classList.toggle("hl",i===hi)); }
+    function choose(p){ h.value=p.iata; t.value=p.city+" ("+p.iata+")"; box.classList.remove("show"); }
+    document.addEventListener("click",(e)=>{ if(!t.contains(e.target)&&!box.contains(e.target)) box.classList.remove("show"); });
+  }
+  setupAC("originText","origin","ac-origin");
+  setupAC("destText","destination","ac-dest");
+
+  // ---------- Utilidades ----------
+  const fmtTime=(iso)=>new Date(iso).toLocaleString("es-MX",{day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"});
+  const fmtDay=(iso)=>new Date(iso+"T00:00:00").toLocaleDateString("es-MX",{weekday:"short",day:"2-digit",month:"short"});
+  const stopsLabel=(n)=>n===0?"Directo":(n+" escala"+(n>1?"s":""));
+
+  // ---------- Link de compra (afiliado o Google Flights) ----------
+  function buyLink(o){
+    if(TP_MARKER){
+      // Aviasales/Travelpayouts deep link: /search/ORIGENddmmDESTINOddmm1
+      const dep=o.date.slice(8,10)+o.date.slice(5,7);
+      let path=o.origin+dep+o.destination;
+      if(o.roundtrip && o.returnDate){ path+=o.returnDate.slice(8,10)+o.returnDate.slice(5,7); }
+      path+="1";
+      return "https://www.aviasales.com/search/"+path+"?marker="+encodeURIComponent(TP_MARKER);
+    }
+    // Fallback neutral: Google Flights de esa ruta/fecha
+    let q="Flights "+o.origin+" to "+o.destination+" on "+o.date;
+    if(o.roundtrip && o.returnDate) q+=" returning "+o.returnDate;
+    return "https://www.google.com/travel/flights?q="+encodeURIComponent(q);
+  }
+
+  function skeletons(){ results.innerHTML=""; for(let i=0;i<4;i++){const s=document.createElement("div");s.className="skeleton";results.appendChild(s);} }
+
+  async function search(p){
+    if(!p.origin||!p.destination){ statusEl.className="status error"; statusEl.textContent="Elige origen y destino de la lista (para tener el código de aeropuerto)."; return; }
     statusEl.className="status";
-    statusEl.textContent="Buscando vuelos "+origin+" → "+destination+(Number(flex)?" (± "+flex+" días)":"")+"…";
-    byday.innerHTML="";
-    skeletons();
-    document.getElementById("go").disabled=true;
+    statusEl.textContent="Buscando "+p.origin+" → "+p.destination+(Number(p.flex)?" (± "+p.flex+" días)":"")+"…";
+    byday.innerHTML=""; skeletons(); $("go").disabled=true;
     try{
-      const r = await fetch(BACKEND_URL.replace(/\/$/,"")+"/search",{
-        method:"POST",headers:{"Content-Type":"application/json"},
-        body:JSON.stringify({origin,destination,date,passengers:Number(passengers)||1,cabin:"economy",flex:Number(flex)||0})
-      });
-      const data = await r.json();
-      if(!r.ok || data.error){ throw new Error(data.error||("Error "+r.status)); }
-      renderByDay(data.byDay||[], date);
-      render(data.offers||[]);
-    }catch(e){
-      results.innerHTML=""; byday.innerHTML="";
-      statusEl.className="status error";
-      statusEl.textContent="No se pudo buscar: "+e.message;
-    }finally{
-      document.getElementById("go").disabled=false;
-    }
+      const r=await fetch(BACKEND_URL+"/search",{method:"POST",headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({origin:p.origin,destination:p.destination,date:p.date,returnDate:p.returnDate||null,passengers:Number(p.passengers)||1,cabin:"economy",flex:Number(p.flex)||0})});
+      const data=await r.json();
+      if(!r.ok||data.error) throw new Error(data.error||("Error "+r.status));
+      renderByDay(data.byDay||[]); render(data.offers||[]);
+      saveSearch(p);
+    }catch(e){ results.innerHTML=""; byday.innerHTML=""; statusEl.className="status error"; statusEl.textContent="No se pudo buscar: "+e.message; }
+    finally{ $("go").disabled=false; }
   }
 
-  function renderByDay(days, selected){
-    if(days.length<=1){ byday.innerHTML=""; return; }
-    byday.innerHTML = days.map((d,i)=>`
-      <div class="day${i===0?' best':''}">
-        <div class="d">${fmtDay(d.date)}${i===0?' · más barato':''}</div>
-        <div class="p">$${d.cheapest.toLocaleString("es-MX",{maximumFractionDigits:0})} <small>${d.currency}</small></div>
-      </div>`).join("");
+  function renderByDay(days){
+    if(days.length<=1){byday.innerHTML="";return;}
+    byday.innerHTML=days.map((d,i)=>`<div class="day${i===0?' best':''}"><div class="d">${fmtDay(d.date)}${i===0?' · más barato':''}</div><div class="p">$${d.cheapest.toLocaleString("es-MX",{maximumFractionDigits:0})} <small>${d.currency}</small></div></div>`).join("");
   }
 
   function render(offers){
-    if(!offers.length){
-      results.innerHTML="";
-      statusEl.textContent="Sin vuelos para esa ruta y fecha.";
-      return;
-    }
-    statusEl.textContent=offers.length+" vuelos encontrados (del más barato al más caro):";
-    results.innerHTML = offers.map((o,i)=>`
+    if(!offers.length){ results.innerHTML=""; statusEl.textContent="Sin vuelos para esa ruta y fecha."; return; }
+    statusEl.textContent=offers.length+" vuelos (del más barato al más caro):";
+    results.innerHTML=offers.map((o,i)=>`
       <div class="offer${i===0?' best':''}">
         <div>
           <div class="air">${o.airline}${i===0?'<span class="tagbest">MÁS BARATO</span>':''}</div>
-          <div class="times"><b>${fmtTime(o.depart)}</b> → <b>${fmtTime(o.arrive)}</b></div>
-          <div class="stops">${stopsLabel(o.stops)}</div>
+          <div class="times"><b>${fmtTime(o.depart)}</b> → <b>${fmtTime(o.arrive)}</b> · ${stopsLabel(o.stops)}</div>
+          ${o.roundtrip&&o.retDepart?`<div class="ret">Regreso: ${fmtTime(o.retDepart)} → ${fmtTime(o.retArrive)} · ${stopsLabel(o.retStops)}</div>`:''}
         </div>
         <div class="price"><div class="amt">$${o.price.toLocaleString("es-MX",{maximumFractionDigits:2})}</div><div class="cur">${o.currency}</div></div>
+        <a class="buy" target="_blank" rel="noopener" href="${buyLink(o)}">
+          <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>Comprar
+        </a>
       </div>`).join("");
   }
 
-  form.addEventListener("submit",function(e){
+  // ---------- Formulario ----------
+  form.addEventListener("submit",(e)=>{
     e.preventDefault();
     search({
-      origin:form.origin.value.trim().toUpperCase(),
-      destination:form.destination.value.trim().toUpperCase(),
-      date:form.date.value,
-      passengers:form.passengers.value,
-      flex:form.flex.value
+      origin:$("origin").value, destination:$("destination").value,
+      originText:$("originText").value, destText:$("destText").value,
+      date:$("date").value, returnDate: tripType==="round" ? $("returnDate").value : null,
+      passengers:$("passengers").value, flex:$("flex").value, tripType
     });
   });
 
-  document.getElementById("quick").addEventListener("click",function(e){
+  $("quick").addEventListener("click",(e)=>{
     const b=e.target.closest(".chip-q"); if(!b) return;
-    form.origin.value=b.dataset.o; form.destination.value=b.dataset.d; form.date.value=b.dataset.date;
-    search({origin:b.dataset.o,destination:b.dataset.d,date:b.dataset.date,passengers:form.passengers.value,flex:form.flex.value});
+    $("origin").value=b.dataset.o; $("originText").value=b.dataset.ot;
+    $("destination").value=b.dataset.d; $("destText").value=b.dataset.dt;
+    $("date").value=b.dataset.date;
+    search({origin:b.dataset.o,destination:b.dataset.d,originText:b.dataset.ot,destText:b.dataset.dt,date:b.dataset.date,returnDate:null,passengers:$("passengers").value,flex:$("flex").value,tripType:"oneway"});
   });
 
-  // ---- Fondo animado de nubes: JS vanilla genera N nubes con posición/tamaño/velocidad aleatorios ----
+  // ---------- Historial guardado (localStorage, persistente) ----------
+  const SKEY="vuelaamigo_saved";
+  function getSaved(){ try{return JSON.parse(localStorage.getItem(SKEY))||[];}catch{return[];} }
+  function saveSearch(p){
+    if(!p.origin||!p.destination||!p.date) return;
+    let list=getSaved();
+    const key=p.origin+"-"+p.destination+"-"+p.date+"-"+(p.returnDate||"")+"-"+p.tripType;
+    list=list.filter(x=>x.key!==key);
+    list.unshift({key,origin:p.origin,destination:p.destination,originText:p.originText,destText:p.destText,date:p.date,returnDate:p.returnDate||null,passengers:p.passengers,flex:p.flex,tripType:p.tripType,ts:Date.now()});
+    list=list.slice(0,12);
+    localStorage.setItem(SKEY,JSON.stringify(list));
+    renderSaved();
+  }
+  function renderSaved(){
+    const list=getSaved(); const box=$("saved"), ul=$("saved-list");
+    if(!list.length){ box.style.display="none"; return; }
+    box.style.display="block";
+    ul.innerHTML=list.map((s,i)=>`<div class="saved-item"><span class="go" data-i="${i}"><b>${s.origin} → ${s.destination}</b> · ${fmtDay(s.date)}${s.tripType==="round"?" (redondo)":""}</span><button class="rm" data-rm="${i}" title="Quitar">×</button></div>`).join("");
+    ul.querySelectorAll(".go").forEach(el=>el.addEventListener("click",()=>{
+      const s=getSaved()[+el.dataset.i]; if(!s) return;
+      setTrip(s.tripType); $("origin").value=s.origin; $("originText").value=s.originText||s.origin;
+      $("destination").value=s.destination; $("destText").value=s.destText||s.destination;
+      $("date").value=s.date; if(s.returnDate)$("returnDate").value=s.returnDate;
+      $("passengers").value=s.passengers||"1"; $("flex").value=s.flex||"0";
+      search({origin:s.origin,destination:s.destination,originText:s.originText,destText:s.destText,date:s.date,returnDate:s.returnDate,passengers:s.passengers,flex:s.flex,tripType:s.tripType});
+    }));
+    ul.querySelectorAll(".rm").forEach(el=>el.addEventListener("click",()=>{
+      let list=getSaved(); list.splice(+el.dataset.rm,1); localStorage.setItem(SKEY,JSON.stringify(list)); renderSaved();
+    }));
+  }
+  renderSaved();
+
+  // ---------- Fondo de nubes ----------
   (function(){
-    const c = document.getElementById("clouds-bg");
-    if(!c) return;
-    const count = 18;
-    const cloudPath = "M20 26a8 8 0 0 1 .6-15.9A11 11 0 0 1 42 12a7 7 0 0 1 2 13.8V26H20z";
-    for(let i=0;i<count;i++){
-      const size = 60 + Math.random()*180;      // 60–240px de ancho
-      const top  = Math.random()*100;
-      const left = Math.random()*100;
-      const delay= Math.random()*-20;            // desfase para que no se muevan iguales
-      const dur  = 22 + Math.random()*16;        // 22–38s (lento)
-      const op   = (0.18 + Math.random()*0.22).toFixed(2); // sutil, dentro de la gama azul
-      const svg = document.createElementNS("http://www.w3.org/2000/svg","svg");
-      svg.setAttribute("viewBox","0 0 64 32");
-      svg.setAttribute("fill","currentColor");
-      svg.style.cssText =
-        "width:"+size+"px;height:auto;top:"+top+"%;left:"+left+"%;opacity:"+op+";"+
-        "animation:driftAll "+dur.toFixed(0)+"s ease-in-out infinite;animation-delay:"+delay.toFixed(1)+"s;";
-      svg.innerHTML = '<path d="'+cloudPath+'"></path>';
+    const c=$("clouds-bg"); if(!c) return;
+    const cloudPath="M20 26a8 8 0 0 1 .6-15.9A11 11 0 0 1 42 12a7 7 0 0 1 2 13.8V26H20z";
+    for(let i=0;i<18;i++){
+      const size=60+Math.random()*180, top=Math.random()*100, left=Math.random()*100;
+      const delay=Math.random()*-20, dur=22+Math.random()*16, op=(0.18+Math.random()*0.22).toFixed(2);
+      const svg=document.createElementNS("http://www.w3.org/2000/svg","svg");
+      svg.setAttribute("viewBox","0 0 64 32"); svg.setAttribute("fill","currentColor");
+      svg.style.cssText="width:"+size+"px;height:auto;top:"+top+"%;left:"+left+"%;opacity:"+op+";animation:driftAll "+dur.toFixed(0)+"s ease-in-out infinite;animation-delay:"+delay.toFixed(1)+"s;";
+      svg.innerHTML='<path d="'+cloudPath+'"></path>';
       c.appendChild(svg);
     }
   })();
