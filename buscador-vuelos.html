@@ -121,6 +121,25 @@
   .saved-item .rm{cursor:pointer;color:var(--blue-500);border:none;background:none;font-size:1rem;line-height:1;padding:0}
   .foot{max-width:1000px;margin:0 auto;padding:6px 20px 50px;color:var(--blue-500);font-size:.8rem}
   .foot .mini{border-top:1px solid var(--line);padding-top:14px}
+  /* chip de version + changelog */
+  .ver-chip{margin-left:8px;border:1px solid var(--line);background:var(--blue-050);color:var(--blue-700);
+    border-radius:20px;padding:2px 9px;font-size:.68rem;font-weight:700;cursor:pointer;line-height:1.4;transition:.15s}
+  .ver-chip:hover{border-color:var(--blue-700);background:var(--blue-100)}
+  .cl-overlay{position:fixed;inset:0;background:rgba(15,42,94,.45);display:none;align-items:flex-start;justify-content:center;z-index:200;padding:40px 16px;overflow-y:auto}
+  .cl-overlay.show{display:flex}
+  .cl-card{background:#fff;border-radius:16px;max-width:560px;width:100%;box-shadow:0 20px 60px rgba(15,42,94,.3);overflow:hidden}
+  .cl-head{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--line)}
+  .cl-head h3{margin:0;font-size:1rem;color:var(--blue-900);display:flex;align-items:center;gap:8px}
+  .cl-close{border:none;background:none;cursor:pointer;color:var(--blue-500);font-size:1.3rem;line-height:1;padding:0 4px}
+  .cl-body{padding:8px 20px 20px;max-height:62vh;overflow-y:auto}
+  .cl-ver{padding:14px 0;border-bottom:1px solid var(--blue-050)}
+  .cl-ver:last-child{border-bottom:none}
+  .cl-ver h4{margin:0 0 7px;font-size:.84rem;color:var(--blue-700);display:flex;align-items:center;gap:8px}
+  .cl-ver .cl-date{font-weight:500;color:var(--blue-500);font-size:.74rem}
+  .cl-ver ul{margin:0;padding-left:0;list-style:none}
+  .cl-ver li{font-size:.8rem;color:var(--blue-900);margin:5px 0;padding-left:22px;position:relative;line-height:1.4}
+  .cl-tag{position:absolute;left:0;top:1px;font-size:.6rem;font-weight:800;border-radius:4px;padding:1px 4px;color:#fff}
+  .cl-add{background:#1f9d55}.cl-chg{background:#2563eb}.cl-fix{background:#d9730d}
 </style>
 </head>
 <body>
@@ -130,6 +149,7 @@
     <div class="brand">
       <span class="logo"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.7 2.3a1 1 0 0 0-1.05-.23L2.75 8.9a1 1 0 0 0 .06 1.88l6.3 2.1 2.1 6.3a1 1 0 0 0 1.88.06l6.83-17.9a1 1 0 0 0-.22-1.04zM10.5 12.1 5.9 10.6 17 6.4l-6.5 5.7zm2.9 5.5-1.5-4.5 5.7-6.5-4.2 11z"/></svg></span>
       <span class="name"><b>VuelaAmigo</b></span>
+      <button class="ver-chip" id="ver-chip" type="button" title="Ver cambios">v1.1</button>
     </div>
     <div class="lang">
       <button class="lang-btn" id="lang-btn"><span class="flag" id="lang-flag">🇧🇷</span><span id="lang-name">Português</span>
@@ -213,6 +233,45 @@
 </main>
 
 <div class="foot"><div class="mini" id="l-foot"></div></div>
+
+<!-- Changelog modal -->
+<div class="cl-overlay" id="cl-overlay">
+  <div class="cl-card">
+    <div class="cl-head">
+      <h3>
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="var(--blue-700)" stroke-width="2"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="9"/></svg>
+        Historial de cambios
+      </h3>
+      <button class="cl-close" id="cl-close" type="button" aria-label="Cerrar">&times;</button>
+    </div>
+    <div class="cl-body" id="cl-body">
+
+      <div class="cl-ver">
+        <h4>v1.1 <span class="cl-date">· 12 sep 2026 · 14:05</span></h4>
+        <ul>
+          <li><span class="cl-tag cl-add">NUEVO</span>Historial de cambios dentro del sitio: el chip de versión junto al logo abre esta ventana.</li>
+          <li><span class="cl-tag cl-fix">FIX</span>El cambio de idioma ya funciona: antes se quedaba en portugués al elegir otro idioma. Ahora cambia bien a español, inglés y alemán.</li>
+          <li><span class="cl-tag cl-chg">CAMBIO</span>El menú de idioma marca cuál está activo y recuerda tu preferencia la próxima vez que entras.</li>
+        </ul>
+      </div>
+
+      <div class="cl-ver">
+        <h4>v1.0 <span class="cl-date">· versión inicial</span></h4>
+        <ul>
+          <li><span class="cl-tag cl-add">NUEVO</span>Buscador de vuelos con datos reales vía Duffel (backend en Cloudflare Worker).</li>
+          <li><span class="cl-tag cl-add">NUEVO</span>Autocompletar de ciudades y aeropuertos al escribir.</li>
+          <li><span class="cl-tag cl-add">NUEVO</span>Viaje solo ida o redondo, con búsqueda flexible de ± 1, 2 o 3 días.</li>
+          <li><span class="cl-tag cl-add">NUEVO</span>Resultados ordenados del más barato al más caro, con el más barato marcado arriba.</li>
+          <li><span class="cl-tag cl-add">NUEVO</span>Precios convertidos a tu moneda (MXN, USD, EUR, BRL) según el idioma.</li>
+          <li><span class="cl-tag cl-add">NUEVO</span>Búsquedas guardadas y tramos rápidos de un clic (MEX-GDL, GDL-TRC, TRC-GDL).</li>
+          <li><span class="cl-tag cl-add">NUEVO</span>Botón Comprar que lleva a completar la reserva (afiliado Travelpayouts).</li>
+          <li><span class="cl-tag cl-add">NUEVO</span>Sitio en 4 idiomas: portugués, español, inglés y alemán.</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</div>
 
 <script>
   const BACKEND_URL = "https://vuelaamigo.mexintouch.workers.dev";
@@ -431,6 +490,18 @@
 
   // init
   setLang(lang);
+
+  // ---------- Changelog (control de versiones del sitio) ----------
+  (function(){
+    const chip=$("ver-chip"), ov=$("cl-overlay");
+    if(!chip||!ov) return;
+    const open=()=>ov.classList.add("show");
+    const close=()=>ov.classList.remove("show");
+    chip.addEventListener("click",(e)=>{e.stopPropagation();open();});
+    $("cl-close").addEventListener("click",close);
+    ov.addEventListener("click",(e)=>{ if(e.target===ov) close(); });
+    document.addEventListener("keydown",(e)=>{ if(e.key==="Escape") close(); });
+  })();
 </script>
 </body>
 </html>
