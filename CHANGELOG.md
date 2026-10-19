@@ -3,6 +3,11 @@
 Historial de cambios del sitio. Lo más reciente arriba. Cada versión también aparece
 dentro del sitio al dar clic en el chip de versión junto al logo.
 
+## v1.2 — 12 sep 2026 · 14:40
+
+### Corregido
+- Las etiquetas de color del historial ya no tapan las primeras letras del texto. Ahora van al lado y se lee todo completo.
+
 ## v1.1 — 12 sep 2026 · 14:05
 
 ### Agregado

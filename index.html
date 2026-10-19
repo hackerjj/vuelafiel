@@ -137,8 +137,8 @@
   .cl-ver h4{margin:0 0 7px;font-size:.84rem;color:var(--blue-700);display:flex;align-items:center;gap:8px}
   .cl-ver .cl-date{font-weight:500;color:var(--blue-500);font-size:.74rem}
   .cl-ver ul{margin:0;padding-left:0;list-style:none}
-  .cl-ver li{font-size:.8rem;color:var(--blue-900);margin:5px 0;padding-left:22px;position:relative;line-height:1.4}
-  .cl-tag{position:absolute;left:0;top:1px;font-size:.6rem;font-weight:800;border-radius:4px;padding:1px 4px;color:#fff}
+  .cl-ver li{font-size:.8rem;color:var(--blue-900);margin:7px 0;line-height:1.4;display:flex;align-items:flex-start;gap:7px}
+  .cl-tag{flex:0 0 auto;font-size:.58rem;font-weight:800;border-radius:4px;padding:2px 5px;color:#fff;margin-top:1px;letter-spacing:.3px}
   .cl-add{background:#1f9d55}.cl-chg{background:#2563eb}.cl-fix{background:#d9730d}
 </style>
 </head>
@@ -149,7 +149,7 @@
     <div class="brand">
       <span class="logo"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.7 2.3a1 1 0 0 0-1.05-.23L2.75 8.9a1 1 0 0 0 .06 1.88l6.3 2.1 2.1 6.3a1 1 0 0 0 1.88.06l6.83-17.9a1 1 0 0 0-.22-1.04zM10.5 12.1 5.9 10.6 17 6.4l-6.5 5.7zm2.9 5.5-1.5-4.5 5.7-6.5-4.2 11z"/></svg></span>
       <span class="name"><b>VuelaAmigo</b></span>
-      <button class="ver-chip" id="ver-chip" type="button" title="Ver cambios">v1.1</button>
+      <button class="ver-chip" id="ver-chip" type="button" title="Ver cambios">v1.2</button>
     </div>
     <div class="lang">
       <button class="lang-btn" id="lang-btn"><span class="flag" id="lang-flag">🇧🇷</span><span id="lang-name">Português</span>
@@ -245,6 +245,13 @@
       <button class="cl-close" id="cl-close" type="button" aria-label="Cerrar">&times;</button>
     </div>
     <div class="cl-body" id="cl-body">
+
+      <div class="cl-ver">
+        <h4>v1.2 <span class="cl-date">· 12 sep 2026 · 14:40</span></h4>
+        <ul>
+          <li><span class="cl-tag cl-fix">FIX</span>Las etiquetas de color del historial ya no tapan las primeras letras del texto. Ahora van al lado y se lee todo completo.</li>
+        </ul>
+      </div>
 
       <div class="cl-ver">
         <h4>v1.1 <span class="cl-date">· 12 sep 2026 · 14:05</span></h4>
