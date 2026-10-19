@@ -3,6 +3,11 @@
 Historial de cambios del sitio. Lo más reciente arriba. Cada versión también aparece
 dentro del sitio al dar clic en el chip de versión junto al logo.
 
+## v1.2.1 — 12 sep 2026 · 15:10
+
+### Corregido
+- Cambio de idioma de verdad. El título del hero estaba invisible encima del menú (problema de z-index) y se comía los clics en las opciones. Verificado con navegador real (Chrome headless): ahora al dar clic cambia a español, inglés y alemán.
+
 ## v1.2 — 12 sep 2026 · 14:40
 
 ### Corregido
