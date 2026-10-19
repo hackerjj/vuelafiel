@@ -45,6 +45,7 @@
     padding:10px 12px;cursor:pointer;font-size:.86rem;color:var(--blue-900);border-bottom:1px solid var(--blue-050)}
   .lang-menu button:last-child{border-bottom:none}
   .lang-menu button:hover{background:var(--blue-050)}
+  .lang-menu button.active-lang{background:var(--blue-050);font-weight:700}
   .lang-menu .cur{margin-left:auto;color:var(--blue-500);font-size:.74rem;font-weight:700}
 
   .hero{max-width:1000px;margin:0 auto;padding:34px 20px 6px;position:relative}
@@ -291,14 +292,26 @@
   }
 
   // menú idioma
-  $("lang-btn").addEventListener("click",(e)=>{e.stopPropagation();$("lang-menu").classList.toggle("show");});
-  document.addEventListener("click",()=>$("lang-menu").classList.remove("show"));
-  $("lang-menu").addEventListener("click",(e)=>{
-    const b=e.target.closest("button"); if(!b) return;
-    lang=b.dataset.lang; cur=LANG_CUR[lang];
-    localStorage.setItem("va_lang",lang);
-    $("lang-menu").classList.remove("show");
+  function setLang(code){
+    if(!I18N[code]) return;            // idioma no soportado, ignorar
+    lang = code;
+    cur  = LANG_CUR[lang] || cur;
+    localStorage.setItem("va_lang", lang);
+    // marcar el idioma activo en el menu
+    document.querySelectorAll("#lang-menu button[data-lang]").forEach((b)=>{
+      b.classList.toggle("active-lang", b.getAttribute("data-lang")===lang);
+    });
     applyLang();
+  }
+  $("lang-btn").addEventListener("click",(e)=>{e.stopPropagation();e.preventDefault();$("lang-menu").classList.toggle("show");});
+  document.addEventListener("click",()=>$("lang-menu").classList.remove("show"));
+  // delegacion: funciona aunque el click caiga en el emoji o en el texto interno
+  $("lang-menu").addEventListener("click",(e)=>{
+    e.stopPropagation();
+    e.preventDefault();
+    const b=e.target.closest("button[data-lang]"); if(!b) return;
+    setLang(b.getAttribute("data-lang"));
+    $("lang-menu").classList.remove("show");
   });
 
   // ---------- Divisas ----------
@@ -419,7 +432,7 @@
       svg.innerHTML='<path d="'+cp+'"></path>'; c.appendChild(svg); } })();
 
   // init
-  applyLang();
+  setLang(lang);
 </script>
 </body>
 </html>
